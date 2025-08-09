@@ -1,0 +1,455 @@
+<app-navbar></app-navbar>
+
+
+
+<section id="static" *ngIf="course1.type === 1">
+  <div class="container-fluid my-5 px-5">
+    <div class="row">
+        <div class="col-md-9">
+        <div class="course-header mb-4">
+          <nav class="breadcrumb">
+            <a class="breadcrumb-item text-white">{{ course1.category.name }}</a>
+          </nav>
+
+          <h2>{{ course1.title }}</h2>
+
+          <!-- ✅ فيديو البرومو -->
+
+
+          <!-- ⭐ تقييم وعدد الطلبة -->
+          <p>
+            ⭐ {{ course1.averageRating }} ({{ course1.ratingsCount }} {{ 'cours-details.ratings' | transloco }})
+            • {{ course1.enrolledStudentsCount }} {{ 'cours-details.Students' | transloco }}
+          </p>
+
+          <!-- 👤 المدرس والتفاصيل -->
+          <p>
+            {{ 'cours-details.Created by' | transloco }}
+            <a class="text-white">{{ course1.teacherName }}</a>
+          </p>
+          <p>
+            {{ 'cours-details.Last updates' | transloco }} {{ course1.lastUpdatedAt || course1.createdAt | date }}
+            • {{ course1.language }} • {{ 'cours-details.Live Course' | transloco }}
+            • {{ course1.level }}
+          </p>
+
+          <button class="btn btn-light">
+            {{ 'cours-details.Book your spot' | transloco }}
+          </button>
+        </div>
+<div class="my-3" *ngIf="course1.promoVideolUrl">
+  <h3 >{{ 'cours-details.promoVideo' | transloco }}</h3>
+            <video
+              width="100%"
+              height="auto"
+              controls
+              [src]="course1.promoVideolUrl"
+              class="rounded shadow-sm my-4"
+            >
+              {{ 'cours-details.Your browser does not support video playback.' | transloco }}
+            </video>
+          </div>
+        <!-- وصف إضافي -->
+        <div class="mt-4 p-3 border rounded">
+          <h5>{{ 'cours-details.Online Live Videos' | transloco }}</h5>
+          <p>
+            {{ 'cours-details.Reserve your seat and schedule the available time for you. Enjoy learning online from anywhere as if you are in class. Try the experience. Ask all questions and get your answers.' | transloco }}
+          </p>
+        </div>
+<div class="mt-5">
+  <h4><i class="fas fa-book"></i> {{ 'cours-details.Course Content' | transloco }}</h4>
+  <p>{{ course1.sections?.length || 0 }} {{ 'cours-details.sections' | transloco }}</p>
+<h4>{{ 'cours-details.This course includes:' | transloco }}</h4>
+  <uL>
+    <!-- <li>{{course1.landingPage.duration}}</li> -->
+    <li>{{ 'cours-details.Assignments & quizzes' | transloco }}</li>
+    <li>{{ 'cours-details.Certification' | transloco }}</li>
+
+  </uL>
+  <div *ngFor="let section of course1.sections; let i = index" class="card my-3 shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">
+        <i class="fas fa-folder-open me-2"></i>
+        {{ 'cours-details.Section' | transloco }} {{ i + 1 }}: {{ section.title }}
+      </h5>
+    </div>
+
+    <div class="card-body">
+      <ng-container *ngFor="let item of section.contentItems; let j = index">
+
+        <!-- 👉 Lecture -->
+        <div *ngIf="item.type === 'Lecture' && item.lecture">
+          <h6 class="fw-bold ms-3">
+            {{ (i + 1) + '.' + (j + 1) }} {{ 'cours-details.Title:' | transloco }} {{ item.lecture.title }}
+          </h6>
+          <p class="text-muted ms-4">
+            {{ 'cours-details.Description:' | transloco }} {{ item.lecture.description || ('cours-details.No description' | transloco) }}
+          </p>
+        </div>
+
+        <!-- 👉 SubSection -->
+        <div *ngIf="item.type === 'SubSection' && item.subSection" class="bg-light p-3 my-2 border rounded">
+          <h6 class="text-secondary">
+            <i class="fas fa-folder me-2"></i>
+            {{ 'cours-details.SubSection' | transloco }}: {{ item.subSection.title }}
+          </h6>
+
+          <div *ngFor="let lec of item.subSection.lectures; let k = index">
+            <h6 class="fw-bold ms-4">
+              {{ (i + 1) + '.' + (j + 1) + '.' + (k + 1) }} {{ 'cours-details.Title:' | transloco }} {{ lec.title }}
+            </h6>
+            <p class="text-muted ms-5">
+              {{ 'cours-details.Description:' | transloco }} {{ lec.description || ('cours-details.No description' | transloco) }}
+            </p>
+          </div>
+        </div>
+
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+
+
+
+      </div>
+       <div class="col-md-3">
+        <div class="course-card text-center">
+          <img
+            [src]="course1.thumbnailUrl || 'assets/default-course.png'"
+            alt="Course Thumbnail"
+            class="img-fluid w-100 rounded-2"
+          />
+          <p class="mt-2">
+            <strong>{{ 'cours-details.Price:' | transloco }} {{ course1.price }} {{ course1.currency }}</strong>
+          </p>
+          <!-- <p class="text-danger">
+            {{ course2.seatsLeft }} {{ 'cours-details.seats left' | transloco }}
+          </p> -->
+
+          <!-- الأزرار -->
+         <div class="btn-container">
+  <!-- Add to Cart -->
+  <button
+    class="btn btn-design1 full-width"
+    *ngIf="!course1.isInCart"
+    (click)="userRole === 'student' ? addToCart2() : openLoginReminderModal2()"
+  >
+    {{ 'cours-details.Add to Cart' | transloco }}
+  </button>
+
+  <!-- Remove from Cart -->
+  <button
+    class="btn btn-design1 full-width"
+    *ngIf="course1.isInCart"
+    (click)="userRole === 'student' ? removeFromCart2() : openLoginReminderModal2()"
+  >
+    {{ 'cours-details.Remove From Cart' | transloco }}
+  </button>
+
+  <!-- Add to Wishlist -->
+  <button
+    class="btn btn-outline-danger"
+    *ngIf="!course1.isInWishlist"
+    (click)="userRole === 'student' ? addToWishlist2() : openLoginReminderModal2()"
+  >
+    {{ 'cours-details.Add to wishlist' | transloco }}
+  </button>
+
+  <!-- Remove from Wishlist -->
+  <button
+    class="btn btn-danger"
+    *ngIf="course1.isInWishlist"
+    (click)="userRole === 'student' ? removeFromWishlist2() : openLoginReminderModal2()"
+  >
+    {{ 'cours-details.Remove from list' | transloco }}
+  </button>
+
+  <!-- Buy Now -->
+  <button
+    class="btn btn-design1"
+    (click)="userRole === 'student' ? addToCart2() : openStudentOnlyModal()"
+    [routerLink]="userRole === 'student' ? 'cart' : null"
+  >
+    {{ 'cours-details.Buy Now' | transloco }}
+  </button>
+</div>
+
+<div
+  class="modal fade"
+  id="loginReminderModal2"
+  tabindex="-1"
+  aria-labelledby="loginReminderModalLabel2"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content text-center p-4">
+      <div class="modal-header border-0">
+        <h5 class="modal-title w-100" id="loginReminderModalLabel2">
+          {{ 'login-reminder.title' | transloco }}
+        </h5>
+      </div>
+      <div class="modal-body">
+        {{ 'login-reminder.body' | transloco }}
+      </div>
+      <div class="modal-footer border-0 justify-content-center">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+          {{ 'login-reminder.okButton' | transloco }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+
+
+  <!-- <div class="container-fluid my-4 px-5">
+    <div class="row">
+      <div class="col-md-6">
+        <h3>{{ 'cours-details.Instructor' | transloco }}</h3>
+        <h2 class="text-primary">{{course1.instructor}}</h2>
+        <p>{{ 'cours-details.Lorem ipsum dolor sit amet, consectetur adipiscing elit.' | transloco }}</p>
+        <div class="row">
+          <div class="col-md-2 instructor-img">
+            <img [src]="course1.instructorImage" alt="" class="">
+          </div>
+          <div class="col-md-8">
+            <ul class="d-flex justify-content-center flex-column ">
+              <li class="py-1"><i class="fa-solid fa-star mx-1"></i> {{instructor.Rating}}  {{ 'cours-details.Instructor Rating' | transloco }}</li>
+              <li class="py-1"><i class="fa-solid fa-tv mx-1"></i> {{instructor.Courses}} {{ 'cours-details.Courses' | transloco }}</li>
+              <li class="py-1"><i class="fa-solid fa-users mx-1"></i> {{instructor.Students}} {{ 'cours-details.Students' | transloco }}</li>
+              <li class="py-1"><i class="fa-solid fa-comment mx-1"></i> {{instructor.Reviews}} {{ 'cours-details.Reviews' | transloco }}</li>
+
+            </ul>
+
+          </div>
+
+        </div>
+        <p>{{ 'cours-details.Lorem ipsum, dolor sit amet consectetur adipisicing elit. Itaque optio consequuntur voluptates ipsa illum rem laudantium fugit modi saepe numquam perferendis, expedita porro quo, dolorum iure repellendus. Non culpa minus explicabo deserunt ab odit labore deleniti similique esse obcaecati perspiciatis corporis sed minima facilis quidem quibusdam, iusto omnis laudantium iure assumenda officiis consequatur nihil. Laudantium, enim, nisi error minus reprehenderit earum itaque alias ad ea numquam accusantium praesentium vel eveniet nihil, rem debitis rerum eaque quo nemo? Error, hic ratione autem deserunt doloribus aperiam rem quo nemo ab quaerat, provident expedita nesciunt distinctio ex dignissimos natus odit maiores soluta nisi.' | transloco }}</p>
+      </div>
+    </div>
+
+  </div> -->
+
+</section>
+
+
+
+<section id="online" *ngIf="course2.type === 2">
+  <div class="container-fluid my-5 px-5">
+    <div class="row">
+      <div class="col-md-9">
+        <div class="course-header mb-4">
+          <nav class="breadcrumb">
+            <a class="breadcrumb-item text-white">{{ course2.category.name }}</a>
+          </nav>
+
+          <h2>{{ course2.title }}</h2>
+
+          <!-- ✅ فيديو البرومو -->
+
+
+          <!-- ⭐ تقييم وعدد الطلبة -->
+          <p>
+            ⭐ {{ course2.averageRating }} ({{ course2.ratingsCount }} {{ 'cours-details.ratings' | transloco }})
+            • {{ course2.enrolledStudentsCount }} {{ 'cours-details.Students' | transloco }}
+          </p>
+
+          <!-- 👤 المدرس والتفاصيل -->
+          <p>
+            {{ 'cours-details.Created by' | transloco }}
+            <a class="text-white">{{ course2.teacherName }}</a>
+          </p>
+          <p>
+            {{ 'cours-details.Last updates' | transloco }} {{ course2.lastUpdatedAt || course2.createdAt | date }}
+            • {{ course2.language }} • {{ 'cours-details.Live Course' | transloco }}
+            • {{ course2.level }}
+          </p>
+
+          <button class="btn btn-light">
+            {{ 'cours-details.Book your spot' | transloco }}
+          </button>
+        </div>
+<div class="my-3" *ngIf="course2.promoVideolUrl">
+  <h3 >{{ 'cours-details.promoVideo' | transloco }}</h3>
+            <video
+              width="100%"
+              height="auto"
+              controls
+              [src]="course2.promoVideolUrl"
+              class="rounded shadow-sm my-4"
+            >
+              {{ 'cours-details.Your browser does not support video playback.' | transloco }}
+            </video>
+          </div>
+        <!-- وصف إضافي -->
+        <div class="mt-4 p-3 border rounded">
+          <h5>{{ 'cours-details.Online Live Videos' | transloco }}</h5>
+          <p>
+            {{ 'cours-details.Reserve your seat and schedule the available time for you. Enjoy learning online from anywhere as if you are in class. Try the experience. Ask all questions and get your answers.' | transloco }}
+          </p>
+        </div>
+<div class="mt-5">
+  <h4><i class="fas fa-book"></i> {{ 'cours-details.Course Content' | transloco }}</h4>
+  <p>{{ course2.sections?.length || 0 }} {{ 'cours-details.sections' | transloco }}</p>
+
+  <div *ngFor="let section of course2.sections; let i = index" class="card my-3 shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">
+        <i class="fas fa-folder-open me-2"></i>
+        {{ 'cours-details.Section' | transloco }} {{ i + 1 }}: {{ section.title }}
+      </h5>
+    </div>
+
+    <div class="card-body">
+      <ng-container *ngFor="let item of section.contentItems; let j = index">
+
+        <!-- 👉 Lecture -->
+        <div *ngIf="item.type === 'Lecture' && item.lecture">
+          <h6 class="fw-bold ms-3">
+            {{ (i + 1) + '.' + (j + 1) }} {{ 'cours-details.Title:' | transloco }} {{ item.lecture.title }}
+          </h6>
+          <p class="text-muted ms-4">
+            {{ 'cours-details.Description:' | transloco }} {{ item.lecture.description || ('cours-details.No description' | transloco) }}
+          </p>
+        </div>
+
+        <!-- 👉 SubSection -->
+        <div *ngIf="item.type === 'SubSection' && item.subSection" class="bg-light p-3 my-2 border rounded">
+          <h6 class="text-secondary">
+            <i class="fas fa-folder me-2"></i>
+            {{ 'cours-details.SubSection' | transloco }}: {{ item.subSection.title }}
+          </h6>
+
+          <div *ngFor="let lec of item.subSection.lectures; let k = index">
+            <h6 class="fw-bold ms-4">
+              {{ (i + 1) + '.' + (j + 1) + '.' + (k + 1) }} {{ 'cours-details.Title:' | transloco }} {{ lec.title }}
+            </h6>
+            <p class="text-muted ms-5">
+              {{ 'cours-details.Description:' | transloco }} {{ lec.description || ('cours-details.No description' | transloco) }}
+            </p>
+          </div>
+        </div>
+
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+
+
+
+      </div>
+
+      <!-- ✅ الجزء الأيمن (الكارد) كما هو -->
+      <div class="col-md-3">
+        <div class="course-card text-center">
+          <img
+            [src]="course2.thumbnailUrl || 'assets/default-course.png'"
+            alt="Course Thumbnail"
+            class="img-fluid w-100 rounded-2"
+          />
+          <p class="mt-2">
+            <strong>{{ 'cours-details.Price:' | transloco }} {{ course2.price }} {{ course2.currency }}</strong>
+          </p>
+          <!-- <p class="text-danger">
+            {{ course2.seatsLeft }} {{ 'cours-details.seats left' | transloco }}
+          </p> -->
+
+          <!-- الأزرار -->
+         <div class="btn-container">
+  <!-- Add to Cart -->
+  <button
+    class="btn btn-design1 full-width"
+    *ngIf="!course2.isInCart"
+    (click)="userRole === 'student' ? addToCart2() : openLoginReminderModal()"
+  >
+    {{ 'cours-details.Add to Cart' | transloco }}
+  </button>
+
+  <!-- Remove from Cart -->
+  <button
+    class="btn btn-design1 full-width"
+    *ngIf="course2.isInCart"
+    (click)="userRole === 'student' ? removeFromCart2() : openLoginReminderModal()"
+  >
+    {{ 'cours-details.Remove From Cart' | transloco }}
+  </button>
+
+  <!-- Add to Wishlist -->
+  <button
+    class="btn btn-outline-danger"
+    *ngIf="!course2.isInWishlist"
+    (click)="userRole === 'student' ? addToWishlist2() : openLoginReminderModal()"
+  >
+    {{ 'cours-details.Add to wishlist' | transloco }}
+  </button>
+
+  <!-- Remove from Wishlist -->
+  <button
+    class="btn btn-danger"
+    *ngIf="course2.isInWishlist"
+    (click)="userRole === 'student' ? removeFromWishlist2() : openLoginReminderModal()"
+  >
+    {{ 'cours-details.Remove from list' | transloco }}
+  </button>
+
+  <!-- Buy Now -->
+  <button
+    class="btn btn-design1"
+    (click)="userRole === 'student' ? addToCart2() : openLoginReminderModal()"
+    [routerLink]="userRole === 'student' ? 'cart' : null"
+  >
+    {{ 'cours-details.Buy Now' | transloco }}
+  </button>
+</div>
+<div
+  class="modal fade"
+  id="loginReminderModal"
+  tabindex="-1"
+  aria-labelledby="loginReminderModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content text-center p-4">
+      <div class="modal-header border-0">
+        <h5 class="modal-title w-100" id="loginReminderModalLabel">
+          {{ 'login-reminder.title' | transloco }}
+        </h5>
+      </div>
+      <div class="modal-body">
+        {{ 'login-reminder.body' | transloco }}
+      </div>
+      <div class="modal-footer border-0 justify-content-center">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+          {{ 'login-reminder.okButton' | transloco }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+
+
+

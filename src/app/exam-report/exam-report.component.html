@@ -1,0 +1,34 @@
+<app-second-nav></app-second-nav>
+
+<div *ngIf="isLoading" class="loading-spinner"></div>
+<div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+<div *ngIf="!isLoading && !error && reportData" class="report-container">
+  <div class="report-modal">
+    <div class="report-header">
+      <h2>{{ reportData.quizTitle }}</h2>
+      <p>{{ 'examReport.reviewPerformance' | transloco }}</p>
+    </div>
+
+    <div class="report-body">
+      <!-- Questions will be dynamically generated here -->
+      <div *ngFor="let question of reportData.questions; let i = index" class="question-block">
+        <div class="question-header">
+          <span class="question-title">{{ 'examReport.question' | transloco }} {{ i + 1 }}: {{ question.questionText }}</span>
+          <span class="badge">{{ question.sourceTitle }}</span>
+        </div>
+        <div class="attempts">
+          <div *ngFor="let answer of question.answers" class="attempt" [ngClass]="{'correct': answer.isCorrect, 'incorrect': !answer.isCorrect}">
+            <span class="attempt-label">{{ 'examReport.attempt' | transloco }} {{ answer.attemptNumber }}:</span>
+            <span class="attempt-answer">{{ (answer.isCorrect ? 'examReport.correctAnswer' : 'examReport.incorrectAnswer') | transloco }}</span>
+            <i class="fas" [ngClass]="{'fa-check-circle': answer.isCorrect, 'fa-times-circle': !answer.isCorrect}"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="report-footer">
+      <a class="btn btn-primary" routerLink="/course-parts">{{ 'examReport.backToHome' | transloco }}</a>
+    </div>
+  </div>
+</div>

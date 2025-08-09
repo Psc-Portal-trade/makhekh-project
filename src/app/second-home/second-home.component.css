@@ -1,0 +1,21 @@
+.hidden-sec {
+  display: block; /* تظهر افتراضيًا في الشاشات الكبيرة */
+}
+
+/* إخفاء العنصر في الشاشات الأصغر من 992px (الموبايل والتابلت) */
+@media (max-width: 991px) {
+  .hidden-sec {
+    display: none;
+  }
+}
+
+.first-letterr {
+  width: 75px;
+  height: 75px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #2d91ee;
+  border-radius: 50%;
+  margin: 0 5px;
+}

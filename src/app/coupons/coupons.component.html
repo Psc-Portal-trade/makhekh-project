@@ -1,0 +1,160 @@
+<div class="d-flex">
+  <app-sidebar></app-sidebar>
+  <div class="container dashboard-container mt-4 mb-5">
+
+  <div class="d-flex align-items-center">
+    <div class="position-relative text-end my-3">
+
+      <div class="first-letter">
+
+            <!-- لو في صورة -->
+<img *ngIf="profileImg && profileImg !== '../../assets/download.jfif'"
+     [src]="profileImg"
+     class="rounded-circle"
+     style="width: 50px; height: 50px;" />
+
+<!-- لو مفيش صورة -->
+<span *ngIf="profileImg === '../../assets/download.jfif'">
+  {{ firstLetter }}
+</span>
+           <div class="profile-menu">
+          <div class="text-center">
+            <div class="d-flex align-items-center mb-3 gap-3">
+              <div class="first-letterr">
+                <span class="rounded-circle  text-white d-flex justify-content-center align-items-center" style="width: 50px; height: 50px; font-size: 24px;">
+
+            <!-- لو في صورة -->
+<img *ngIf="profileImg && profileImg !== '../../assets/download.jfif'"
+     [src]="profileImg"
+     class="rounded-circle"
+     style="width: 50px; height: 50px;" />
+
+<!-- لو مفيش صورة -->
+<span *ngIf="profileImg === '../../assets/download.jfif'">
+  {{ firstLetter }}
+</span>
+                </span>
+              </div>
+              <div class="text-start">
+              <h5 class="mb-0">{{fullName}}</h5>
+                    <p class="text-muted mb-0">{{email}}</p>
+              </div>
+            </div>
+           </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item" routerLink="studentHome">{{ "second-navbar.home" | transloco }}</li>
+            <li class="list-group-item">{{ "second-navbar.my courses" | transloco }}</li>
+            <li class="list-group-item" routerLink="cart">{{ "second-navbar.My Cart" | transloco }} </li>
+            <li class="list-group-item" routerLink="wishedList">{{ "second-navbar.Wishlist" | transloco }}</li>
+            <li class="list-group-item" >{{ "second-navbar.Instructor Dashboard" | transloco }}</li>
+            <li class="divider"></li>
+
+            <li class="list-group-item" >{{ "second-navbar.Notifications" | transloco }}</li>
+            <li class="list-group-item">{{ "second-navbar.Messages" | transloco }}</li>
+            <li class="divider"></li>
+
+            <li class="list-group-item">{{ "second-navbar.Account Settings" | transloco }}</li>
+            <li class="list-group-item">{{ "second-navbar.Payment Methods" | transloco }}</li>
+            <li class="divider"></li>
+
+            <li class="list-group-item"  (click)="changeLang()">{{ "second-navbar.Language" | transloco }}</li>
+            <li class="divider"></li>
+
+            <li class="list-group-item">{{ "second-navbar.Help and Support" | transloco }}</li>
+            <li class="list-group-item text-danger" (click)="logout()"> {{ "second-navbar.Log out" | transloco }}</li>
+          </ul>
+
+        </div>
+      </div>
+    
+      </div>
+
+      <div class="mx-3 second-sec">
+        <i class="fa-solid fa-bell"></i>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+        <div class="main-content">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">{{"navigation.coupons" | transloco}}</h2>
+        <button class="btn btn-primary" (click)="toggleCreateForm()">
+          <i class="fa-solid fa-plus me-2"></i>{{"coupons.create_new" | transloco}}
+        </button>
+      </div>
+
+      <!-- Coupon Creation/Edit Form -->
+      <div *ngIf="showCreateForm" class="card p-4 mb-5 shadow-sm">
+        <h4 class="card-title mb-4">
+          {{ (isEditing ? 'coupons.edit_coupon_title' : 'coupons.create_coupon_title') | transloco }}
+        </h4>
+        <form [formGroup]="couponForm" (ngSubmit)="saveCoupon()">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="couponName" class="form-label">{{"coupons.name_label" | transloco}}</label>
+              <input type="text" class="form-control" id="couponName" formControlName="name" placeholder="e.g., SUMMER25">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="discountPercentage" class="form-label">{{"coupons.discount_label" | transloco}}</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="discountPercentage" formControlName="discount" placeholder="e.g., 25">
+                <span class="input-group-text">%</span>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-secondary me-2" (click)="cancelForm()">{{"common.cancel" | transloco}}</button>
+            <button type="submit" class="btn btn-success" [disabled]="couponForm.invalid">
+              {{ (isEditing ? 'common.update' : 'common.save') | transloco }}
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Coupons Table -->
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h4 class="card-title mb-4">{{"coupons.existing_coupons" | transloco}}</h4>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th scope="col">{{"coupons.table_header_name" | transloco}}</th>
+                  <th scope="col">{{"coupons.table_header_discount" | transloco}}</th>
+                  <th scope="col">{{"coupons.table_header_status" | transloco}}</th>
+                  <th scope="col" class="text-end">{{"coupons.table_header_actions" | transloco}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let coupon of coupons">
+                  <td><strong>{{ coupon.name }}</strong></td>
+                  <td>{{ coupon.discount }}%</td>
+                  <td>
+                    <span class="badge" [ngClass]="coupon.active ? 'bg-success' : 'bg-danger'">
+                      {{ (coupon.active ? 'common.active' : 'common.inactive') | transloco }}
+                    </span>
+                  </td>
+                  <td class="text-end">
+                    <button class="btn btn-sm btn-outline-secondary me-2" (click)="toggleCouponStatus(coupon)">
+                      <i class="fa-solid" [ngClass]="coupon.active ? 'fa-toggle-on' : 'fa-toggle-off'"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-primary me-2" (click)="editCoupon(coupon)">
+                      <i class="fa-solid fa-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" (click)="deleteCoupon(coupon.id)">
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+                <tr *ngIf="coupons.length === 0">
+                    <td colspan="4" class="text-center text-muted py-4">{{"coupons.no_coupons_found" | transloco}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

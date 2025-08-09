@@ -1,0 +1,286 @@
+<div class="d-flex ">
+
+<!-- <app-sidebar-students></app-sidebar-students> -->
+
+<div class="container  content-item">
+
+
+<div class="d-flex align-items-center">
+  <div class="position-relative text-end my-3">
+
+    <div class="first-letter">
+       <img *ngIf="profile.profileImageUrl && profile.profileImageUrl.trim() !== ''"
+       [src]="profile.profileImageUrl"
+       class="rounded-circle"
+       style="width: 50px; height: 50px;"
+       alt="Profile" />
+
+  <span *ngIf="!profile.profileImageUrl || profile.profileImageUrl.trim() === ''">
+    {{ firstLetter }}
+  </span>
+      <div class="profile-menu">
+        <div class="text-center">
+          <div class="d-flex align-items-center mb-3 gap-3">
+            <div class="first-letterr">
+              <span class="rounded-circle  text-white d-flex justify-content-center align-items-center" style="width: 50px; height: 50px; font-size: 24px;">
+                <img *ngIf="profile.profileImageUrl && profile.profileImageUrl.trim() !== ''"
+       [src]="profile.profileImageUrl"
+       class="rounded-circle"
+       style="width: 50px; height: 50px;"
+       alt="Profile" />
+
+  <span *ngIf="!profile.profileImageUrl || profile.profileImageUrl.trim() === ''">
+    {{ firstLetter }}
+  </span>
+              </span>
+            </div>
+            <div class="text-start">
+              <h5 class="mb-0">{{fullName}}</h5>
+                    <p class="text-muted mb-0">{{email}}</p>
+            </div>
+          </div>
+         </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item" routerLink="studentHome">{{ "second-navbar.home" | transloco }}</li>
+          <li class="list-group-item" routerLink="my-courses">{{ "second-navbar.my courses" | transloco }}</li>
+          <li class="list-group-item" routerLink="cart">{{ "second-navbar.My Cart" | transloco }}</li>
+          <li class="list-group-item" routerLink="wishedList">{{ "second-navbar.Wishlist" | transloco }}</li>
+          <!-- <li class="list-group-item" >{{ "second-navbar.Instructor Dashboard" | transloco }}</li> -->
+          <li class="divider"></li>
+
+          <li class="list-group-item">{{ "second-navbar.Notifications" | transloco }}</li>
+          <li class="list-group-item">{{ "second-navbar.Messages" | transloco }}</li>
+          <li class="divider"></li>
+
+          <li class="list-group-item">{{ "second-navbar.Account Settings" | transloco }}</li>
+          <li class="list-group-item">{{ "second-navbar.Payment Methods" | transloco }}</li>
+          <li class="divider"></li>
+
+          <li class="list-group-item"  (click)="changeLang()">{{ "second-navbar.Language" | transloco }}</li>
+          <li class="divider"></li>
+
+          <li class="list-group-item">{{ "second-navbar.Help and Support" | transloco }}</li>
+          <li class="list-group-item text-danger" (click)="logout()"> {{ "second-navbar.Log out" | transloco }}</li>
+        </ul>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="mx-3 second-sec">
+    <i class="fa-solid fa-bell"></i>
+    <!-- <a class="pe-3 text-decoration-none text-black" routerLink="instructor-profile">
+      {{ 'profile.instructorView' | transloco }}
+      <i class="fa-solid fa-people-arrows px-1"></i>
+    </a> -->
+  </div>
+</div>
+
+
+
+
+<div class="responsive-class">
+  <div class="">
+    <h2 class="mb-5 mt-5">{{ 'profile.pageTitle' | transloco }}</h2>
+    <ul class="nav nav-tabs mb-4">
+      <li class="nav-item">
+        <a class="nav-link " [class.active]="activeTab === 'profile'" (click)="setActiveTab('profile')">{{ 'profile.profileTab' | transloco }}</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " [class.active]="activeTab === 'suggestions'" (click)="setActiveTab('suggestions')">{{ 'profile.suggestionsTab' | transloco }}</a>
+      </li>
+    </ul>
+
+    <div class="row " id="profile" *ngIf="activeTab === 'profile'">
+      <div class="col-s-3">
+        <img [src]="profile.profileImageUrl || profileImg" class="rounded-circle profile-img" style="width: 200px; height: 200px;" alt="{{ 'profile.photoAlt' | transloco }}" />
+
+
+ <div  class="mt-4 d-flex align-items-center gap-2">
+      <label for="edit-input" class="btn btn-success mb-3">
+ Change Photo
+</label>
+<input type="file"
+       id="edit-input"
+       class="d-none"
+       accept=".jpg,.jpeg,.png"
+       (change)="uploadDirectToApi($event)" />
+            </div>
+
+      </div>
+<div class="py-4">
+  <!-- Full Name -->
+  <div class="mb-3">
+    <label class="form-label text-primary fw-bold">Full Name:</label>
+    <div *ngIf="!isEditMode">{{ profile.fullName }}</div>
+    <input *ngIf="isEditMode" type="text" class="form-control" [(ngModel)]="profile.fullName" disabled/>
+  </div>
+
+  <!-- Email -->
+  <div class="mb-3">
+    <label class="form-label text-primary fw-bold">Email:</label>
+    <div *ngIf="!isEditMode">{{ profile.email }}</div>
+    <input *ngIf="isEditMode" type="email" class="form-control" [(ngModel)]="profile.email" disabled />
+  </div>
+
+  <!-- Job (كنص عادي) -->
+  <div class="mb-3">
+    <label class="form-label text-primary fw-bold">Job:</label>
+    <div *ngIf="!isEditMode">{{ profile.job }}</div>
+    <input *ngIf="isEditMode" type="text" class="form-control" [(ngModel)]="profile.job" />
+  </div>
+
+  <!-- Facebook (يبقى رابط زى ما هو) -->
+  <div class="mb-3">
+    <label class="form-label text-primary fw-bold">Facebook:</label>
+    <div *ngIf="!isEditMode" class="anchor">
+      <a *ngIf="profile.facebook" [href]="profile.facebook" target="_blank" class="text-muted">Facebook Link</a>
+    </div>
+    <input *ngIf="isEditMode" type="text" class="form-control" [(ngModel)]="profile.facebook" />
+  </div>
+
+  <!-- LinkedIn as Email -->
+  <div class="mb-3">
+    <label class="form-label text-primary fw-bold">LinkedIn:</label>
+    <div *ngIf="!isEditMode" class="anchor">
+       <a *ngIf="profile.linkedIn" [href]="profile.linkedIn" target="_blank" class="text-muted">LinkedIn Link</a>
+    </div>
+    <input *ngIf="isEditMode" type="email" class="form-control" [(ngModel)]="profile.linkedIn" />
+  </div>
+
+  <!-- Description -->
+  <div class="mb-3">
+    <label class="form-label text-primary fw-bold">Description:</label>
+    <div *ngIf="!isEditMode">{{ profile.description }}</div>
+    <input *ngIf="isEditMode" type="text" class="form-control" [(ngModel)]="profile.description" />
+  </div>
+
+  <!-- Major -->
+  <div class="mb-3">
+    <label class="form-label text-primary fw-bold">Major:</label>
+    <div *ngIf="!isEditMode">{{ profile.major }}</div>
+    <input *ngIf="isEditMode" type="text" class="form-control" [(ngModel)]="profile.major" />
+  </div>
+
+  <!-- Buttons -->
+  <button *ngIf="!isEditMode" (click)="edit()" class="btn btn-primary">Edit</button>
+  <button *ngIf="isEditMode" (click)="update()" class="btn btn-success">Update</button>
+</div>
+
+    </div>
+    <!-- <div class="row">
+      <div *ngIf="activeTab === 'suggestions'" class="mb-4">
+        <form class="mb-2">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="address" class="form-label">{{ 'profile.address' | transloco }} <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="address" [(ngModel)]="address" name="address">
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="file" class="form-label">{{ 'profile.file' | transloco }}</label>
+              <div class="input-group">
+                <input type="file" class="form-control text-muted" id="file" (change)="Selected($event)">
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="proposal" class="form-label">{{ 'profile.addProposal' | transloco }} <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="proposal" [(ngModel)]="proposal" name="proposal">
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="description" class="form-label">{{ 'profile.proposalDescription' | transloco }}</label>
+              <input type="text" class="form-control" id="description" [(ngModel)]="description" name="description">
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="category" class="form-label">{{ 'profile.category' | transloco }}</label>
+              <select class="form-select" id="category" [(ngModel)]="category" name="category">
+                <option value="design">{{ 'profile.design' | transloco }}</option>
+                <option value="development">{{ 'profile.development' | transloco }}</option>
+                <option value="marketing">{{ 'profile.marketing' | transloco }}</option>
+              </select>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="courses" class="form-label">{{ 'profile.courses' | transloco }}</label>
+              <select class="form-select" id="courses" [(ngModel)]="courses" name="courses">
+                <option value="web-design">{{ 'profile.webDesign' | transloco }}</option>
+                <option value="ux-ui">{{ 'profile.uxUi' | transloco }}</option>
+                <option value="full-stack">{{ 'profile.fullStack' | transloco }}</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" [disabled]="!isFormValid()">{{ 'profile.save' | transloco }}</button>
+        </form>
+      </div>
+    </div> -->
+ <div class="row">
+      <div *ngIf="activeTab === 'suggestions'" class="mb-4">
+        <form class="mb-2">
+          <div class="row">
+            <!-- Address -->
+            <div class="col-md-6 mb-3">
+              <label for="address" class="form-label">Address <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="address" [(ngModel)]="address" name="address">
+            </div>
+
+            <!-- File Upload -->
+            <div class="col-md-6 mb-3">
+              <label for="file" class="form-label">File</label>
+              <div class="input-group">
+                <input type="file" class="form-control text-muted" id="file" (change)="Selected($event)">
+              </div>
+            </div>
+
+            <!-- Add Proposal -->
+            <div class="col-md-6 mb-3">
+              <label for="proposal" class="form-label">Add Proposal <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="proposal" [(ngModel)]="proposal" name="proposal">
+            </div>
+
+            <!-- Proposal Description -->
+            <div class="col-md-6 mb-3">
+              <label for="description" class="form-label">Proposal Description</label>
+              <input type="text" class="form-control" id="description" [(ngModel)]="description" name="description">
+            </div>
+
+            <!-- Category Dropdown -->
+            <div class="col-md-6 mb-3">
+              <label for="category" class="form-label">Category</label>
+              <select class="form-select" id="category" [(ngModel)]="category" name="category">
+                <option value="design">Design</option>
+                <option value="development">Development</option>
+                <option value="marketing">Marketing</option>
+              </select>
+            </div>
+
+            <!-- Courses Dropdown -->
+            <div class="col-md-6 mb-3">
+              <label for="courses" class="form-label">Courses</label>
+              <select class="form-select" id="courses" [(ngModel)]="courses" name="courses">
+                <option value="web-design">Web Design</option>
+                <option value="ux-ui">UX/UI</option>
+                <option value="full-stack">Full Stack</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Save Button -->
+          <button type="submit" class="btn btn-primary" [disabled]="!isFormValid()">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+  </div>
+</div>
+
+
+

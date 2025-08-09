@@ -1,0 +1,44 @@
+<app-second-nav></app-second-nav>
+
+
+<div class="hidden-sec">
+  <app-courses ></app-courses>
+  <div class="container-fluid px-4 pt-5">
+    <div class="row">
+      <div class="col-md-4 ">
+        <div class="d-flex">
+          <!-- <div><img src="assets/Frame.png" alt=""></div> -->
+            <div class="first-letterr">
+                    <span class="rounded-circle  text-white d-flex justify-content-center align-items-center" style="width: 50px; height: 50px; font-size: 24px;">
+
+            <!-- لو في صورة -->
+<img *ngIf="profileImg && profileImg !== '../../assets/download.jfif'"
+     [src]="profileImg"
+     class="rounded-circle"
+     style="width: 75px; height: 75px;" />
+
+<!-- لو مفيش صورة -->
+<span *ngIf="profileImg === '../../assets/download.jfif'">
+  {{ firstLetter }}
+</span>
+                    </span>
+                  </div>
+          <div class="px-4">
+            <h2> {{ "secondHome.Welcome, Name" | transloco }}{{fullName}} </h2>
+            <p *ngIf="userRole === 'student'">{{job}}</p>
+            <p *ngIf="userRole === 'teacher'">teacher</p>
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-second-home-header></app-second-home-header>
+<app-continue-learning *ngIf="userRole !== 'teacher'"></app-continue-learning>
+<app-recommended-videos></app-recommended-videos>
+<app-featured-courses></app-featured-courses>
+

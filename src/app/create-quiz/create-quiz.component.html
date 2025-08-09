@@ -1,0 +1,608 @@
+<div class="d-flex">
+  <app-sidebar></app-sidebar>
+  <div class="container dashboard-container mt-4 mb-5">
+    <div class="d-flex align-items-center">
+      <div class="position-relative text-end my-3">
+        <div class="first-letter">
+          <!-- لو في صورة -->
+          <img *ngIf="profileImg && profileImg !== '../../assets/download.jfif'" [src]="profileImg"
+            class="rounded-circle" style="width: 50px; height: 50px;" />
+          <!-- لو مفيش صورة -->
+          <span *ngIf="profileImg === '../../assets/download.jfif'">
+            {{ firstLetter }}
+          </span>
+          <div class="profile-menu">
+            <div class="text-center">
+              <div class="d-flex align-items-center mb-3 gap-3">
+                <div class="first-letterr">
+                  <span class="rounded-circle text-white d-flex justify-content-center align-items-center"
+                    style="width: 50px; height: 50px; font-size: 24px;">
+                    <!-- لو في صورة -->
+                    <img *ngIf="profileImg && profileImg !== '../../assets/download.jfif'" [src]="profileImg"
+                      class="rounded-circle" style="width: 50px; height: 50px;" />
+                    <!-- لو مفيش صورة -->
+                    <span *ngIf="profileImg === '../../assets/download.jfif'">
+                      {{ firstLetter }}
+                    </span>
+                  </span>
+                </div>
+                <div class="text-start">
+                  <h5 class="mb-0">{{ fullName }}</h5>
+                  <p class="text-muted mb-0">{{ email }}</p>
+                </div>
+              </div>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item" routerLink="studentHome">
+                {{ "second-navbar.home" | transloco }}
+              </li>
+              <li class="list-group-item">
+                {{ "second-navbar.my courses" | transloco }}
+              </li>
+              <li class="list-group-item" routerLink="cart">
+                {{ "second-navbar.My Cart" | transloco }}
+              </li>
+              <li class="list-group-item" routerLink="wishedList">
+                {{ "second-navbar.Wishlist" | transloco }}
+              </li>
+              <li class="list-group-item">
+                {{ "second-navbar.Instructor Dashboard" | transloco }}
+              </li>
+              <li class="divider"></li>
+              <li class="list-group-item">
+                {{ "second-navbar.Notifications" | transloco }}
+              </li>
+              <li class="list-group-item">
+                {{ "second-navbar.Messages" | transloco }}
+              </li>
+              <li class="divider"></li>
+              <li class="list-group-item">
+                {{ "second-navbar.Account Settings" | transloco }}
+              </li>
+              <li class="list-group-item">
+                {{ "second-navbar.Payment Methods" | transloco }}
+              </li>
+              <li class="divider"></li>
+              <li class="list-group-item" (click)="changeLang()">
+                {{ "second-navbar.Language" | transloco }}
+              </li>
+              <li class="divider"></li>
+              <li class="list-group-item">
+                {{ "second-navbar.Help and Support" | transloco }}
+              </li>
+              <li class="list-group-item text-danger" (click)="logout()">
+                {{ "second-navbar.Log out" | transloco }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="mx-3 second-sec">
+        <i class="fa-solid fa-bell"></i>
+        <!-- <a class="pe-3 text-decoration-none text-black" routerLink="student-profile"> student View <i class="fa-solid fa-people-arrows px-1"></i></a> -->
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Header Section -->
+      <div class="header container d-flex justify-content-between">
+        <h2>{{ "dashboard.createQuiz" | transloco }}</h2>
+        <a routerLink="quiz">
+          <button class="btn btn-primary">
+            {{ "dashboard.getStarted" | transloco }}
+          </button>
+        </a>
+      </div>
+      <input type="text" class="form-control mt-3 p-3 text-black fw-bold" [(ngModel)]="searchQuery"
+        (input)="onSearchChange()" [placeholder]="'quiz.search_placeholder' | transloco">
+
+      <div class="container mt-4">
+        <div class="row">
+          <div class="col-md-4 mb-4" *ngFor="let quiz of quizzes">
+            <div class="card h-100 shadow">
+              <img src="../../assets/quizz.png" class="card-img-top" alt="Quiz Image" />
+              <div class="card-body d-flex flex-column align-items-center">
+                <h5 class="card-title text-center">{{ quiz.title }}</h5>
+               <button *ngIf="quiz.isStandalone === true"
+  class="btn btn-primary mt-2 fs-6 text-center" (click)="openModal(quiz)">
+  {{ "quiz.view_details" | transloco }}
+</button>
+<button *ngIf="quiz.isStandalone === false "
+  class="btn btn-success mt-2 fs-6 text-center" (click)="openCourseQuizDetails(quiz)">
+  {{ "quiz.view_course_quiz_details" | transloco }}
+</button>
+                <div class="d-flex justify-content-between align-items-center w-100 mt-3">
+                  <button type="button" class="btn btn-success mt-3" (click)="showQuestions(quiz.id)">
+                    {{ "quiz.show_questions" | transloco }}
+                  </button>
+                  <button type="button" class="btn btn-danger mt-3" (click)="openDeleteConfirmModal(quiz.id)">
+                    {{ "quiz.delete_quiz" | transloco }}
+                  </button>
+                </div>
+                <div id="questionsModal" class="modal" tabindex="-1"
+                  [ngStyle]="{ display: showQuestionModal ? 'block' : 'none' }">
+                  <div class="modal-dialog modal-lg">
+                    <div class="modal-content p-3">
+                      <div class="modal-header">
+                        <h5 class="modal-title">{{ 'quiz.questions_preview' | transloco }}</h5>
+                        <button type="button" class="btn-close" (click)="closeQuestionModal()"></button>
+                      </div>
+                      <div class="modal-body" *ngIf="quizQuestions.length > 0">
+                        <div *ngFor="let question of quizQuestions; let i = index" class="mb-4 p-3 border rounded">
+                          <!-- View Mode -->
+                          <div *ngIf="!question.isEditing">
+                            <h6 class="fw-bold">{{ 'quiz.question' | transloco }} {{ i + 1 }}: {{ question.text }}</h6>
+                            <p><strong>{{ 'quiz.marks' | transloco }}:</strong> {{ question.marks }}</p>
+                            <div *ngIf="question.type === 1">
+                              <ul class="list-unstyled">
+                                <li *ngFor="let choice of question.choices" [class.text-success]="choice.isCorrect">
+                                  {{ choice.text }} <i *ngIf="choice.isCorrect" class="fa fa-check"></i>
+                                </li>
+                              </ul>
+                            </div>
+                            <div *ngIf="question.type === 2">
+                              <p><strong>{{ 'quiz.correct_answer' | transloco }}:</strong> {{ question.modelAnswer }}</p>
+                            </div>
+                            <p *ngIf="question.answerExplanation"><strong>{{ 'quiz.answer_explanation' | transloco }}:</strong> {{ question.answerExplanation }}</p>
+                            <button class="btn btn-sm btn-outline-primary" (click)="editQuestion(question)">{{ 'quiz.edit' | transloco }}</button>
+                          </div>
+
+                          <!-- Edit Mode -->
+                          <div *ngIf="question.isEditing">
+                            <div class="mb-3">
+                              <label class="form-label fw-bold">{{ 'quiz.question' | transloco }}</label>
+                              <input type="text" class="form-control" [(ngModel)]="question.text" name="questionText{{i}}">
+                            </div>
+                            <div class="mb-3">
+                              <label class="form-label fw-bold">{{ 'quiz.marks' | transloco }}</label>
+                              <input type="number" class="form-control" [(ngModel)]="question.marks" name="questionMarks{{i}}">
+                            </div>
+                            <div *ngIf="question.type === 1">
+                              <label class="form-label fw-bold">{{ 'quiz.options' | transloco }}</label>
+                              <div *ngFor="let choice of question.choices; let j = index" class="input-group mb-2">
+                                <div class="input-group-text">
+                                  <input class="form-check-input mt-0" type="radio" name="correctChoice{{i}}" [checked]="choice.isCorrect" (change)="selectCorrectChoice(question, choice)">
+                                </div>
+                                <input type="text" class="form-control" [(ngModel)]="choice.text" name="choiceText{{i}}{{j}}">
+                              </div>
+                            </div>
+                            <div *ngIf="question.type === 2">
+                              <label class="form-label fw-bold">{{ 'quiz.correct_answer' | transloco }}</label>
+                              <textarea class="form-control" [(ngModel)]="question.modelAnswer" name="modelAnswer{{i}}"></textarea>
+                            </div>
+                            <div class="mb-3">
+                              <label class="form-label fw-bold">{{ 'quiz.answer_explanation' | transloco }}</label>
+                              <textarea class="form-control" [(ngModel)]="question.answerExplanation" name="answerExplanation{{i}}"></textarea>
+                            </div>
+                            <button class="btn btn-sm btn-success me-2" (click)="saveQuestion(question)">{{ 'quiz.save' | transloco }}</button>
+                            <button class="btn btn-sm btn-secondary" (click)="cancelEdit(question)">{{ 'quiz.cancel' | transloco }}</button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" (click)="closeQuestionModal()">{{ 'quiz.close' | transloco }}</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="deleteConfirmModal" class="modal" tabindex="-1"
+                  [ngStyle]="{ display: showDeleteConfirmModal ? 'block' : 'none' }">
+                  <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">{{ 'quiz.delete_confirm_title' | transloco }}</h5>
+                        <button type="button" class="btn-close" (click)="closeDeleteConfirmModal()"></button>
+                      </div>
+                      <div class="modal-body">
+                        <p>{{ 'quiz.delete_confirm_message' | transloco }}</p>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" (click)="closeDeleteConfirmModal()">
+                          {{ 'quiz.cancel' | transloco }}
+                        </button>
+                        <button type="button" class="btn btn-danger" (click)="deleteQuiz(selectedQuiz)">
+                          {{ 'quiz.confirm_delete' | transloco }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+     <!-- Quiz Modal -->
+     <div id="quizModal" class="modal" tabindex="-1" style="display: none;">
+      <div class="modal-dialog modal-lg">
+        <button type="button" class="btn-close position-absolute top-0 end-0 m-3" (click)="closeModal()"></button>
+        <div class="modal-content p-3">
+          <div class="modal-header d-flex justify-content-between">
+            <div>
+              <h5 class="modal-title">{{ "quiz.create" | transloco }}</h5>
+            </div>
+            <div>
+              <button class="btn btn-close" (click)="closeModal()">X</button>
+            </div>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="quizForm">
+              <div class="mb-3">
+                <label class="form-label">{{
+                  "quiz.course_name" | transloco
+                  }}</label>
+                <input type="text" formControlName="courseName" class="form-control" [readonly]="true" />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">{{
+                  "quiz.description" | transloco
+                  }}</label>
+                <textarea formControlName="examDescription" class="form-control" [readonly]="true"></textarea>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">{{
+                  "quiz.category" | transloco
+                  }}</label>
+                <select formControlName="categoryId" class="form-select" [disabled]="true">
+                  <option *ngFor="let category of categories" [value]="category.id">
+                    {{ category.name }}
+                  </option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">{{
+                  "quiz.quiz_type" | transloco
+                  }}</label>
+                <input type="text" formControlName="quizType" class="form-control" [readonly]="true" />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">{{
+                  "quiz.duration" | transloco
+                  }}</label>
+                <input type="number" formControlName="duration" class="form-control" [readonly]="true" />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">{{
+                  "quiz.attempts" | transloco
+                  }}</label>
+                <input type="number" formControlName="attempts" class="form-control" [readonly]="true" />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">{{
+                  "quiz.passing_score" | transloco
+                  }}</label>
+                <input type="number" formControlName="passingPercentage" class="form-control" [readonly]="true" />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">{{
+                  "quiz.is_free" | transloco
+                  }}</label>
+                <input type="checkbox" formControlName="isFree" [readonly]="true" class="m-2" />
+              </div>
+              <div class="mb-3" *ngIf="!quizForm.get('isFree')?.value">
+                <label class="form-label">{{
+                  "quiz.price" | transloco
+                  }}</label>
+                <input type="number" formControlName="price" class="form-control" [readonly]="true" />
+              </div>
+
+              <!-- Questions List -->
+              <!-- Questions List -->
+              <div formArrayName="questions">
+                <div *ngFor="let question of questions.controls; let i = index" [formGroupName]="i"
+                  class="border p-3 mb-2 rounded bg-light">
+                  <label class="form-label">{{ "quiz.question" | transloco }} {{ i + 1 }}</label>
+                  <input type="text" class="form-control" formControlName="text" required />
+
+                  <!-- MCQ Section -->
+                  <ng-container *ngIf="question.get('type')?.value === 1">
+                    <div class="mt-3">
+                      <label class="form-label">{{ "quiz.options" | transloco }}</label>
+                      <div formArrayName="options">
+                        <div *ngFor="let option of question.get('options')?.controls; let j = index"
+                          [formGroupName]="j" class="form-check d-flex align-items-center gap-2 mb-2">
+                          <input type="radio" class="form-check-input" [value]="j"
+                            [formControl]="question.get('correctOptionIndex')" />
+                          <input type="text" class="form-control" formControlName="optionValue"
+                            [placeholder]="'quiz.option' | transloco : { value: j + 1 }" required />
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+
+                  <!-- Essay Section -->
+                  <ng-container *ngIf="question.get('type')?.value === 2">
+                    <label class="form-label mt-3">{{ "quiz.correct_answer" | transloco }}</label>
+                    <textarea class="form-control" formControlName="correctAnswer" required></textarea>
+                  </ng-container>
+
+                  <div class="mt-2">
+                    <label class="form-label">{{ "quiz.marks" | transloco }}</label>
+                    <input type="number" class="form-control w-25" formControlName="marks" min="1" required />
+                  </div>
+
+                  <div class="mt-2">
+                    <label class="form-label">{{ "quiz.answer_explanation" | transloco }}</label>
+                    <textarea class="form-control" formControlName="answerExplanation" rows="2"></textarea>
+                  </div>
+
+                  <button type="button" class="btn btn-danger btn-sm mt-2" (click)="removeQuestion(i)">
+                    {{ "quiz.remove_question" | transloco }}
+                  </button>
+                </div>
+              </div>
+
+
+              <div class="mt-3 d-flex flex-column gap-2 align-items-start">
+                <button type="button" *ngIf="quizType === 1" class="btn btn-primary fs-6 p-3"
+                  (click)="addStandaloneQuestion('mcq')">
+                  {{ "quiz.add_mcq_question" | transloco }}
+                </button>
+                <button type="button" *ngIf="quizType === 2" class="btn btn-secondary p-3"
+                  (click)="addStandaloneQuestion('essay')">
+                  {{ "quiz.add_essay_question" | transloco }}
+                </button>
+
+                <!-- إرسال الأسئلة -->
+                <button type="button" (click)="submitStandaloneQuestions(selectedQuiz?.id)" class="btn btn-success">
+                  {{ "quiz.submit_questions" | transloco }}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+      <!-- Course Quiz Modal -->
+  <!-- Course Quiz Modal -->
+  <div id="courseQuizModal" class="modal" tabindex="-1" style="display: none;">
+    <div class="modal-dialog modal-lg">
+      <button type="button" class="btn-close position-absolute top-0 end-0 m-3" (click)="closeCourseQuizModal()"></button>
+      <div class="modal-content p-3">
+        <div class="modal-header d-flex justify-content-between">
+          <h5 class="modal-title">{{ "quiz.course_quiz_details" | transloco }}</h5>
+          <button class="btn btn-close" (click)="closeCourseQuizModal()">X</button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="quizForm">
+            <div class="mb-3">
+              <label class="form-label">{{ "quiz.course_name" | transloco }}</label>
+              <input type="text" formControlName="courseName" class="form-control" [readonly]="true" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">{{ "quiz.description" | transloco }}</label>
+              <textarea formControlName="examDescription" class="form-control" [readonly]="true"></textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">{{ "quiz.quiz_type" | transloco }}</label>
+              <input type="text" formControlName="quizType" class="form-control" [readonly]="true" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">{{ "quiz.duration" | transloco }}</label>
+              <input type="number" formControlName="duration" class="form-control" [readonly]="true" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">{{ "quiz.attempts" | transloco }}</label>
+              <input type="number" formControlName="attempts" class="form-control" [readonly]="true" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">{{ "quiz.passing_score" | transloco }}</label>
+              <input type="number" formControlName="passingPercentage" class="form-control" [readonly]="true" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">{{ "quiz.is_free" | transloco }}</label>
+              <input type="checkbox" formControlName="isFree" [readonly]="true" class="m-2" />
+            </div>
+            <div class="mb-3" *ngIf="!quizForm.get('isFree')?.value">
+              <label class="form-label">{{ "quiz.price" | transloco }}</label>
+              <input type="number" formControlName="price" class="form-control" [readonly]="true" />
+            </div>
+  
+            <!-- Questions Section -->
+            <div class="mt-4" formArrayName="questions">
+              <button type="button" class="btn btn-primary mb-3" (click)="addDynamicQuestion()">
+                {{ 'quiz.add_question' | transloco }}
+              </button>
+  
+              <div *ngFor="let question of questions.controls; let i = index" [formGroupName]="i" class="border rounded p-3 mb-3">
+                <!-- Course-level quiz: Dynamic section, section lectures, subsections, and dynamic subsection lectures -->
+                <div class="mb-2" *ngIf="isCourseLevel">
+                  <label class="form-label">{{ 'quiz.section_name' | transloco }}</label>
+                  <select class="form-control" [formControlName]="'sectionId'" (change)="onSectionChange(i)">
+                    <option value="" disabled selected>{{ 'quiz.select_section' | transloco }}</option>
+                    <option *ngFor="let section of courseData?.sections" [value]="section.id">
+                      {{ section.title }}
+                    </option>
+                  </select>
+                  <div *ngIf="question.get('sectionId')?.hasError('required') && question.get('sectionId')?.touched" class="text-danger">
+                    {{ 'quiz.errors.section_required' | transloco }}
+                  </div>
+  
+                  <div class="mb-2">
+                    <label class="form-label">{{ 'quiz.select_section_lecture' | transloco }}</label>
+                    <select class="form-control" [formControlName]="'sectionLectureId'">
+                      <option value="" disabled selected>{{ 'quiz.select_lecture' | transloco }}</option>
+                      <option *ngFor="let lecture of getSectionLectures(question.get('sectionId')?.value || selectedQuiz?.sectionId)" [value]="lecture.id">
+                        {{ lecture.title }}
+                      </option>
+                    </select>
+                    <div *ngIf="question.get('sectionLectureId')?.hasError('required') && question.get('sectionLectureId')?.touched" class="text-danger">
+                      {{ 'quiz.errors.lecture_required' | transloco }}
+                    </div>
+                  </div>
+  
+                  <div class="mb-2">
+                    <label class="form-label">{{ 'quiz.select_subsection' | transloco }}</label>
+                    <select class="form-control" [formControlName]="'subsectionId'" (change)="onSubsectionChange(i)">
+                      <option value="" disabled selected>{{ 'quiz.select_subsection' | transloco }}</option>
+                      <option *ngFor="let subsection of getSubsectionsForSection(question.get('sectionId')?.value || selectedQuiz?.sectionId)" [value]="subsection.id">
+                        {{ subsection.title }}
+                      </option>
+                    </select>
+                  </div>
+  
+                  <div class="mb-2" *ngIf="question.get('subsectionId')?.value">
+                    <label class="form-label">{{ 'quiz.select_subsection_lecture' | transloco }}</label>
+                    <select class="form-control" [formControlName]="'subsectionLectureId'">
+                      <option value="" disabled selected>{{ 'quiz.select_lecture' | transloco }}</option>
+                      <option *ngFor="let lecture of getSubsectionLectures(question.get('sectionId')?.value || selectedQuiz?.sectionId, question.get('subsectionId')?.value)" [value]="lecture.id">
+                        {{ lecture.title }}
+                      </option>
+                    </select>
+                    <div *ngIf="question.get('subsectionLectureId')?.hasError('required') && question.get('subsectionLectureId')?.touched" class="text-danger">
+                      {{ 'quiz.errors.lecture_required' | transloco }}
+                    </div>
+                    <div *ngIf="!sectionData" class="text-info">Loading lectures...</div>
+                  </div>
+                </div>
+  
+                <!-- Section-level quiz: Show fixed section, subsection, and lecture dropdowns -->
+                <div class="mb-2" *ngIf="isSectionLevel">
+                  <label class="form-label">{{ 'quiz.section_name' | transloco }}</label>
+                  <input type="text" class="form-control" [value]="sectionData?.title || ''" [readonly]="true" />
+                  <input type="hidden" [formControlName]="'sectionId'" [value]="sectionData?.id" />
+  
+                  <div class="mb-2">
+                    <label class="form-label">{{ 'quiz.select_subsection' | transloco }}</label>
+                    <select class="form-control" [formControlName]="'subsectionId'" (change)="onSubsectionChange(i)">
+                      <option value="" disabled selected>{{ 'quiz.select_subsection' | transloco }}</option>
+                      <option *ngFor="let subsection of sectionData?.subSections" [value]="subsection.id">
+                        {{ subsection.title }}
+                      </option>
+                    </select>
+                    <div *ngIf="question.get('subsectionId')?.hasError('required') && question.get('subsectionId')?.touched" class="text-danger">
+                      {{ 'quiz.errors.subsection_required' | transloco }}
+                    </div>
+                  </div>
+  
+                  <div class="mb-2">
+                    <label class="form-label">{{ 'quiz.select_section_lecture' | transloco }}</label>
+                    <select class="form-control" [formControlName]="'sectionLectureId'">
+                      <option value="" disabled selected>{{ 'quiz.select_lecture' | transloco }}</option>
+                      <option *ngFor="let lecture of getSectionLectures(sectionData?.id)" [value]="lecture.id">
+                        {{ lecture.title }}
+                      </option>
+                    </select>
+                    <div *ngIf="question.get('sectionLectureId')?.hasError('required') && question.get('sectionLectureId')?.touched" class="text-danger">
+                      {{ 'quiz.errors.lecture_required' | transloco }}
+                    </div>
+                  </div>
+  
+                  <div class="mb-2" *ngIf="question.get('subsectionId')?.value">
+                    <label class="form-label">{{ 'quiz.select_subsection_lecture' | transloco }}</label>
+                    <select class="form-control" [formControlName]="'subsectionLectureId'">
+                      <option value="" disabled selected>{{ 'quiz.select_lecture' | transloco }}</option>
+                      <option *ngFor="let lecture of getSubsectionLectures(sectionData?.id, question.get('subsectionId')?.value)" [value]="lecture.id">
+                        {{ lecture.title }}
+                      </option>
+                    </select>
+                    <div *ngIf="question.get('subsectionLectureId')?.hasError('required') && question.get('subsectionLectureId')?.touched" class="text-danger">
+                      {{ 'quiz.errors.lecture_required' | transloco }}
+                    </div>
+                    <div *ngIf="!sectionData" class="text-info">Loading lectures...</div>
+                  </div>
+                </div>
+  
+                <!-- Subsection-level quiz: Show fixed section, fixed subsection, and lecture dropdown -->
+                <div class="mb-2" *ngIf="isSubsectionLevel">
+                  <div class="mb-2">
+                    <label class="form-label">{{ 'quiz.subsection_name' | transloco }}</label>
+                    <input type="text" class="form-control" [value]="sectionData?.title" [readonly]="true" />
+                    <input type="hidden" [formControlName]="'subsectionId'" [value]="selectedQuiz?.subSectionId" />
+                  </div>
+                
+                  <div class="mb-2">
+                    <label class="form-label">{{ 'quiz.select_subsection_lecture' | transloco }}</label>
+                    <select class="form-control" [formControlName]="'subsectionLectureId'">
+                      <option value="" disabled selected>{{ 'quiz.select_lecture' | transloco }}</option>
+                      <option *ngFor="let lecture of currentSubsectionLectures" [value]="lecture.id">
+                        {{ lecture.title }}
+                      </option>
+                    </select>
+                    <div *ngIf="question.get('subsectionLectureId')?.hasError('required') && question.get('subsectionLectureId')?.touched" class="text-danger">
+                      {{ 'quiz.errors.lecture_required' | transloco }}
+                    </div>
+                    <div *ngIf="!currentSubsectionLectures.length && selectedQuiz?.subSectionId" class="text-info">Loading lectures...</div>
+                  </div>
+                </div>
+  
+                <!-- Lecture-level quiz: Show lecture as readonly input -->
+                <div class="mb-2" *ngIf="isLectureLevel">
+                  <label class="form-label">{{ 'quiz.lecture_name' | transloco }}</label>
+                  <input type="text" class="form-control" [value]="getLectureTitle()" [readonly]="true" />
+                  <input type="hidden" [formControlName]="'lectureId'" />
+                </div>
+  
+                <!-- Question Text -->
+                <div class="mb-2">
+                  <label>{{ 'quiz.question' | transloco }} {{ i + 1 }}</label>
+                  <input class="form-control" formControlName="text" />
+                  <div *ngIf="question.get('text')?.hasError('required') && question.get('text')?.touched" class="text-danger">
+                    {{ 'quiz.errors.question_required' | transloco }}
+                  </div>
+                </div>
+  
+                <!-- MCQ Options -->
+                <ng-container *ngIf="question.get('type')?.value === 1">
+                  <label class="form-label">{{ 'quiz.options' | transloco }}</label>
+                  <div formArrayName="options">
+                    <div *ngFor="let option of getOptions(i).controls; let j = index" [formGroupName]="j" class="d-flex gap-2 mb-1">
+                      <input type="radio" class="form-check-input" [value]="j" [formControl]="question.get('correctOptionIndex')" />
+                      <input type="text" class="form-control" formControlName="optionValue" />
+                      <div *ngIf="option.get('optionValue')?.hasError('required') && option.get('optionValue')?.touched" class="text-danger">
+                        {{ 'quiz.errors.option_required' | transloco }}
+                      </div>
+                    </div>
+                  </div>
+                  <div *ngIf="question.get('correctOptionIndex')?.hasError('required') && question.get('correctOptionIndex')?.touched" class="text-danger">
+                    {{ 'quiz.errors.correct_option_required' | transloco }}
+                  </div>
+                </ng-container>
+  
+                <!-- Essay -->
+                <ng-container *ngIf="question.get('type')?.value === 2">
+                  <label class="form-label mt-2">{{ 'quiz.correct_answer' | transloco }}</label>
+                  <textarea class="form-control" formControlName="correctAnswer"></textarea>
+                  <div *ngIf="question.get('correctAnswer')?.hasError('required') && question.get('correctAnswer')?.touched" class="text-danger">
+                    {{ 'quiz.errors.correct_answer_required' | transloco }}
+                  </div>
+                </ng-container>
+  
+                <div class="mt-2">
+                  <label class="form-label">{{ 'quiz.marks' | transloco }}</label>
+                  <input type="number" class="form-control w-25" formControlName="marks" />
+                  <div *ngIf="question.get('marks')?.hasError('required') && question.get('marks')?.touched" class="text-danger">
+                    {{ 'quiz.errors.marks_required' | transloco }}
+                  </div>
+                  <div *ngIf="question.get('marks')?.hasError('min') && question.get('marks')?.touched" class="text-danger">
+                    {{ 'quiz.errors.marks_min' | transloco }}
+                  </div>
+                </div>
+  
+                <div class="mt-2">
+                  <label class="form-label">{{ 'quiz.answer_explanation' | transloco }}</label>
+                  <textarea class="form-control" formControlName="answerExplanation"></textarea>
+                </div>
+  
+                <button class="btn btn-danger mt-2" type="button" (click)="removeQuestion(i)">
+                  {{ 'quiz.remove_question' | transloco }}
+                </button>
+              </div>
+            </div>
+  
+            <div class="mt-3 d-flex flex-column gap-2 align-items-start">
+              <button type="button" (click)="submitQuizQuestions(selectedQuiz?.id)" class="btn btn-success">
+                {{ "quiz.submit_questions" | transloco }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

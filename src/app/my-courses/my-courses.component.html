@@ -1,0 +1,155 @@
+<app-second-nav></app-second-nav>
+
+<div class="container-fluid bg-section mt-3">
+  <div class="container py-5">
+    <h2 class="fw-bold py-5 text-white">{{"my-courses.My Courses" | transloco}}</h2>
+  </div>
+</div>
+
+<div class="container my-5">
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link active" data-bs-toggle="tab" data-bs-target="#all-courses">{{"my-courses.All Courses" | transloco}}</a>
+    </li>
+    <!-- <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="tab" data-bs-target="#tests">{{"my-courses.tests" | transloco}}</a>
+    </li> -->
+
+  </ul>
+
+  <div class="tab-content mt-3">
+    <!-- Tab: All Courses -->
+    <div id="all-courses" class="tab-pane fade show active">
+  <!-- 🔍 حقل البحث -->
+  <input
+    *ngIf="allCourses.length > 0"
+    type="text"
+    class="form-control mb-3"
+    placeholder="Search for a course..."
+    [(ngModel)]="searchQueryLectures"
+    (input)="updateFilteredLectures()" />
+
+  <div class="container mt-4">
+    <div class="row gy-3">
+      <!-- ❌ في حالة عدم وجود نتائج -->
+      <div class="no-items" *ngIf="filteredLectures.length === 0">
+        <img src="assets/no items yet.jpg" alt="No items yet" />
+        <p>{{ "my-courses.No items yet" | transloco }}</p>
+      </div>
+
+      <!-- ✅ عرض الكروسات -->
+      <div
+        class="col-md-4"
+        *ngFor="let course of paginatedLectures"
+        (click)="goToCourseDetails(course)"
+        style="cursor: pointer;">
+        <div class="card course-card">
+          <div class="course-image">
+            <img [src]="course.thumbnailUrl" class="card-img-top" alt="{{ course.title }}" />
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">{{ course.title }}</h5>
+            <p class="card-text instructor">{{ course.teacherName || 'بدون مدرس' }}</p>
+            <p class="progress-text">{{ course.totalDurationHours || 0 }} ساعات</p>
+            <!-- يمكنك تعديل الـ Progress حسب النسبة -->
+            <div class="progress">
+              <div class="progress-bar" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 📄 Pagination -->
+    <div class="pagination-controls mt-3" *ngIf="filteredLectures.length > 0">
+      <button
+        *ngFor="let page of getPagesArrayLectures()"
+        (click)="goToPageLectures(page)"
+        [class.active]="page === currentPageLectures">
+        {{ page }}
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!--
+<div id="tests" class="tab-pane fade show active p-3">
+  <div class="row mb-3">
+    <div class="col-md-3">
+      <select class="form-select" [(ngModel)]="selectedCourseId" (change)="onCourseChange()">
+        <option value="">{{ 'quizzes.allCourses' | transloco }}</option>
+        <option *ngFor="let course of allCourses" [value]="course.id">{{ course.title }}</option>
+      </select>
+    </div>
+
+    <div class="col-md-3">
+      <select class="form-select" [(ngModel)]="selectedSectionId" (change)="onSectionChange()" [disabled]="!sections.length">
+        <option value="">{{ 'quizzes.allSections' | transloco }}</option>
+        <option *ngFor="let sec of sections" [value]="sec.id">{{ sec.title }}</option>
+      </select>
+    </div>
+
+    <div class="col-md-3">
+      <select class="form-select" [(ngModel)]="selectedSubSectionId" (change)="onSubSectionChange()" [disabled]="!subSections.length">
+        <option value="">{{ 'quizzes.allSubSections' | transloco }}</option>
+        <option *ngFor="let sub of subSections" [value]="sub.id">{{ sub.title }}</option>
+      </select>
+    </div>
+
+    <div class="col-md-3">
+      <select class="form-select" [(ngModel)]="selectedLectureId" [disabled]="!lectures.length">
+        <option value="">{{ 'quizzes.allLectures' | transloco }}</option>
+        <option *ngFor="let lec of lectures" [value]="lec.id">{{ lec.title }}</option>
+      </select>
+    </div>
+  </div>
+
+  <input
+    *ngIf="allQuizzes.length > 0"
+    type="text"
+    class="form-control mb-3"
+    [placeholder]="'quizzes.search' | transloco"
+    [(ngModel)]="searchQuery"
+  />
+
+  <div class="row gy-3">
+    <div class="col-md-6" *ngFor="let quiz of paginatedQuizzes">
+      <div class="card p-3 shadow-sm">
+        <h5>{{ quiz.title }}</h5>
+        <p><strong>{{ 'quizzes.course' | transloco }}:</strong> {{ quiz.courseTitle }}</p>
+        <p><strong>{{ 'quizzes.attempts' | transloco }}:</strong> {{ quiz.attemptsAllowed }}</p>
+        <p><strong>{{ 'quizzes.duration' | transloco }}:</strong> {{ quiz.timeLimitInMinutes }} {{ 'quizzes.minutes' | transloco }}</p>
+        <button class="btn btn-primary btn-sm" (click)="startQuiz(quiz)">
+          {{ 'quizzes.start' | transloco }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4 text-center" *ngIf="totalPagesQuizzes > 1">
+    <button
+      class="btn btn-sm me-1"
+      *ngFor="let page of getPagesArrayQuizzes()"
+      [class.btn-primary]="page === currentPage"
+      [class.btn-outline-primary]="page !== currentPage"
+      (click)="goToPageQuizzes(page)">
+      {{ page }}
+    </button>
+  </div>
+
+  <div *ngIf="paginatedQuizzes.length === 0" class="text-center text-muted my-4">
+    <p>{{ 'quizzes.noResults' | transloco }}</p>
+  </div>
+</div> -->
+
+
+
+
+
+
+
+
+
+  </div>
+</div>

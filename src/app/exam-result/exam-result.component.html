@@ -1,0 +1,116 @@
+<app-second-nav></app-second-nav>
+
+<section class="container my-4">
+  <h1>{{ 'examResult.title' | transloco }}: {{ quiz.quizTitle }}</h1>
+<div class="exam-summary-card">
+  <div class="exam-summary-item">
+    <strong>{{ 'examResult.status' | transloco }}:</strong>
+    <span [ngClass]="isPassed ? 'status-pass' : 'status-fail'">
+      {{ isPassed ? ('examResult.passed' | transloco) : ('examResult.failed' | transloco) }}
+    </span>
+  </div>
+  <div class="exam-summary-item">
+    <strong>{{ 'examResult.timeUsed' | transloco }}:</strong> {{ timeUsed }}
+  </div>
+  <div class="exam-summary-item">
+    <strong>{{ 'examResult.totalQuestions' | transloco }}:</strong> {{ totalQuestions }}
+  </div>
+  <div class="exam-summary-item">
+    <strong>{{ 'examResult.correctAnswers' | transloco }}:</strong> {{ correctAnswers }}
+  </div>
+  <div class="exam-summary-item">
+    <strong>{{ 'examResult.unanswered' | transloco }}:</strong> {{ unanswered }}
+  </div>
+  <div class="exam-summary-item">
+    <strong>{{ 'examResult.percentage' | transloco }}:</strong> {{ percentage }}%
+  </div>
+</div>
+
+
+  <div *ngFor="let section of structuredQuestions">
+    <h2>  {{ 'examResult.sectionTitle' | transloco }}  : {{ section.title }}</h2>
+
+    <div *ngFor="let item of section.contentItems" class="lecture-box">
+      <!-- 🟢 عنوان المحتوى -->
+     <h3>
+  <ng-container *ngIf="isTitleObject(item.title); else titleString">
+    <ng-container [ngSwitch]="item.title.type">
+      <span *ngSwitchCase="'lecture'">
+        {{ 'examResult.lecture' | transloco }}: {{ item.title.name }}
+      </span>
+      <span *ngSwitchCase="'subSection'">
+        {{ 'examResult.subSection' | transloco }}: {{ item.title.name }}
+      </span>
+      <span *ngSwitchCase="'subSectionLecture'">
+        {{ 'examResult.subSectionLecture' | transloco }}: {{ item.title.parent }} - {{ item.title.name }}
+      </span>
+      <span *ngSwitchCase="'sectionQuestions'">
+        {{ 'examResult.sectionQuestions' | transloco }}
+      </span>
+      <span *ngSwitchCase="'general'">
+        {{ 'examResult.general' | transloco }}
+      </span>
+    </ng-container>
+  </ng-container>
+
+  <!-- fallback لو العنوان مجرد نص -->
+  <ng-template #titleString>
+    {{ item.title }}
+  </ng-template>
+</h3>
+
+
+
+<p *ngIf="isTitleObject(item.title)" style="margin: 0 0 8px 0; font-weight: bold;">
+  {{ item.title.name }}
+</p>
+
+      <p style="font-size: 14px; color: gray; margin-bottom: 15px;">
+        {{ 'examResult.totalQuestions' | transloco }}: {{ item.questions.length }} |
+        {{ 'examResult.answeredQuestions' | transloco }}: {{ getAnsweredCount(item.questions) }}
+      </p>
+
+      <div *ngFor="let question of item.questions" class="question-box" style="margin-bottom: 20px;">
+        <p>
+          <strong>{{ 'examResult.question' | transloco }}:</strong> {{ question.text }}
+          <span *ngIf="question.isUnique" style="color: orange">⭐ {{ 'examResult.featured' | transloco }}</span>
+        </p>
+
+        <!-- ✅ اختيار من متعدد -->
+        <ul *ngIf="quizType === 1">
+          <li
+            *ngFor="let option of question.choices || question.options; let i = index"
+            [ngClass]="{
+              'correct-answer': option.text === question.modelAnswer,
+              'wrong-answer': option.text === question.studentAnswer && option.text !== question.modelAnswer,
+              'student-answer': option.text === question.studentAnswer
+            }"
+          >
+            {{ getOptionLetter(i) }}) {{ option.text }}
+            <span *ngIf="option.text === question.modelAnswer">✔️</span>
+            <span *ngIf="option.text === question.studentAnswer && option.text !== question.modelAnswer">❌</span>
+            <span *ngIf="option.text === question.studentAnswer">👤</span>
+          </li>
+        </ul>
+
+        <!-- 📝 سؤال مقالي -->
+        <div *ngIf="quizType === 2">
+          <p>
+            <strong>{{ 'examResult.studentAnswer' | transloco }}:</strong>
+            <span class="icon-user">👤</span>
+            {{ question.studentAnswer || ('examResult.noAnswer' | transloco) }}
+          </p>
+          <p>
+            <strong>{{ 'examResult.modelAnswer' | transloco }}:</strong>
+            <span class="correct-answer">✔️</span>
+            {{ question.modelAnswer }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noData>
+    <p>{{ 'examResult.noData' | transloco }}</p>
+  </ng-template>
+</section>

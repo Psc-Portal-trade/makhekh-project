@@ -1,0 +1,35 @@
+<app-second-nav></app-second-nav>
+
+<div class="container-fluid bg-section mt-3">
+  <div class="container py-5">
+    <h2 class="fw-bold py-5 text-white">{{"students_orders.title" | transloco}}</h2>
+  </div>
+</div>
+
+<div class="orders-container">
+  <div class="header">
+    <h1>{{ 'students_orders.title' | transloco }}</h1>
+    <button (click)="exportToPDF()" class="export-btn">{{ 'students_orders.export_report' | transloco }}</button>
+  </div>
+
+  <table class="orders-table">
+    <thead>
+      <tr>
+        <th>{{ 'students_orders.order_id' | transloco }}</th>
+        <th>{{ 'students_orders.course_name' | transloco }}</th>
+        <th>{{ 'students_orders.teacher_name' | transloco }}</th>
+        <th>{{ 'students_orders.enrollment_date' | transloco }}</th>
+        <th>{{ 'students_orders.teacher_referral' | transloco }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let course of enrolledCourses">
+        <td>#{{ course.courseId }}</td>
+        <td>{{ course.courseName }}</td>
+        <td>{{ course.teacherName }}</td>
+        <td>{{ course.enrollmentDate | date: 'mediumDate' }}</td>
+        <td>{{ course.isTeacherReferral ? 'Yes' : 'No' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
