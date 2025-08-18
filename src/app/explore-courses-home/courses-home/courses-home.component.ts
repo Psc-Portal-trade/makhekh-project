@@ -1,51 +1,40 @@
-import { HttpClientModule } from '@angular/common/http'; // <-- هنا
-import { RouterLink } from '@angular/router';
-import { TranslocoPipe } from '@ngneat/transloco';
-import { CategoriesService } from '../../services/categories.service';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Output, EventEmitter } from '@angular/core'; // ✅
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-courses-home',
   standalone: true,
-  imports: [ HttpClientModule,CommonModule], // <-- هنا
+  imports: [CommonModule, HttpClientModule],
   templateUrl: './courses-home.component.html',
   styleUrl: './courses-home.component.css'
 })
 export class CoursesHomeComponent implements OnInit {
   categories: any[] = [];
-@Output() categorySelected = new EventEmitter<string>(); // ✅
+  @Output() categorySelected = new EventEmitter<string>();
+  selectedCategoryName: string | null = null;
 
-  constructor(private categoriesService: CategoriesService) {}
-selectedCategoryName: string | null = null;
-
-onSelectCategory(name: string) {
-  this.selectedCategoryName = name;
-  this.categorySelected.emit(name); // ✅ إرسال اسم الكاتيجوري للأب
-}
-
+  constructor(private http: HttpClient) {}
 
   ngOnInit() {
-    window.scrollTo(0, 0);
     this.getCategories();
   }
 
+  onSelectCategory(name: string) {
+    this.selectedCategoryName = name;
+    this.categorySelected.emit(name);
+  }
+
   getCategories() {
-  this.categoriesService.getCategories().subscribe({
-    next: (res) => {
-      this.categories = res.data; // <-- نوصل للـ data هنا
-    },
-    error: (err) => {
-      console.error('Error fetching categories:', err);
-    }
-  });
-}
-
-
-
-
-
-
-
-
+    this.http.get<any>('https://api.makhekh.com/api/Categories').subscribe({
+      next: (res) => {
+        const data = Array.isArray(res?.data) ? res.data : (Array.isArray(res) ? res : []);
+        this.categories = data;
+        console.log('[CoursesHome] categories:', this.categories);
+      },
+      error: (err) => {
+        console.error('[CoursesHome] Categories ERROR:', err.status, err);
+      }
+    });
+  }
 }

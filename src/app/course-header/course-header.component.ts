@@ -115,8 +115,6 @@ export class CourseHeaderComponent implements OnInit {
   courseObj: any = {};
   originalCourseData: any = {};
   copiedCourse: any = null;
-
-  summaryAttachments: { name: string, description: string, file: File | null }[] = [{ name: '', description: '', file: null }];
   currentStep = 0;
   allFormData: any = {};
   selectedSchedule: any[] = [];
@@ -127,7 +125,7 @@ export class CourseHeaderComponent implements OnInit {
 
     {  titleEn: 'Curriculum',titleAr: 'مقرر',  completed: false },
     // { titleEn: 'Pricing & Promotions',titleAr: 'التسعير والعروض الترويجية', completed: false },
-    { titleEn: 'Create Coupons',titleAr: 'إنشاء قسائم', completed: false }
+    // { titleEn: 'Create Coupons',titleAr: 'إنشاء قسائم', completed: false }
   ];
   stepsLive_Streamed_Educational_Courses = [
     { titleEn: 'Instructor Schedules',titleAr: 'جداول المدربين', completed: false },
@@ -197,30 +195,12 @@ courseData = {
 
   constructor(private http: HttpClient, private route: ActivatedRoute,  private router: Router,private translocoService: TranslocoService,    private instructorCoursesService: InstructorCoursesService,
   ) {
-    this.activeLang = this.translocoService.getActiveLang();
     this.translocoService.langChanges$.subscribe(lang => {
       this.activeLang = lang;
     });
-  }
 
-  addSummaryAttachment() {
-    this.summaryAttachments.push({ name: '', description: '', file: null });
-  }
-
-  removeSummaryAttachment(index: number) {
-    if (this.summaryAttachments.length > 1) {
-      this.summaryAttachments.splice(index, 1);
-    }
-  }
-
-  onSummaryAttachmentFileSelected(event: any, index: number) {
-    const file = event.target.files?.[0];
-    if (file) {
-      this.summaryAttachments[index].file = file;
-    }
-  }
-
-  addSubSectionLectureFile(sectionIndex: number, contentIndex: number, lectureIndex: number) {
+   }
+addSubSectionLectureFile(sectionIndex: number, contentIndex: number, lectureIndex: number) {
   const item = this.sections[sectionIndex].content[contentIndex];
   if (item.type === 'subsection') {
     item.data.lectures[lectureIndex].files.push({
@@ -576,19 +556,17 @@ async submitCourseFlow(isDrafted: boolean) {
       console.log("✅ Coupon Created:", couponRes);
     }
 
-    for (const attachment of this.summaryAttachments) {
-      if (attachment.file && attachment.name) {
-        const f = new FormData();
-        f.append("EntityId", courseId);
-        f.append("FileName", attachment.name);
-        f.append("Description", attachment.description);
-        f.append("attachment", attachment.file);
-        f.append("EntityType", "1");
+    if (this.course.book && this.course.bookTitle && this.course.bookDescription) {
+      const f = new FormData();
+      f.append("EntityId", courseId);
+      f.append("FileName", this.course.bookTitle);
+      f.append("Description", this.course.bookDescription);
+      f.append("attachment", this.course.book);
+      f.append("EntityType", "1");
 
-        console.log("📤 Uploading summary attachment:", attachment.name);
-        await this.http.post("https://api.makhekh.com/api/summary-attachments", f, { headers }).toPromise();
-        console.log("✅ Summary attachment uploaded:", attachment.name);
-      }
+      console.log("📤 Uploading Book File:", this.course.bookTitle);
+      const bookUploadRes = await this.http.post("https://api.makhekh.com/api/summary-attachments", f, { headers }).toPromise();
+      console.log("✅ Book File Uploaded:", bookUploadRes);
     }
 
     const approveBody = {
@@ -738,16 +716,18 @@ isLoading: boolean = false;
 
 
        this.courseObj.curriculum = this.sections;
-      break;
+       this.isLoading = true;
+      this.submitCourseFlow(false);
+      return; // ⛔ نحذف التنقل من هنا
 
-    case 2:
-      this.courseObj.coupons = [...this.coupons];
+    // case 2:
+    //   this.courseObj.coupons = [...this.coupons];
       // this.instructorCoursesService.addCourse(this.courseObj);
 
       // ✅ نشغّل السبنر ونستدعي الارسال
-      this.isLoading = true;
-      this.submitCourseFlow(false);
-      return; // ⛔ نحذف التنقل من هنا
+      // this.isLoading = true;
+      // this.submitCourseFlow(false);
+      // return; // ⛔ نحذف التنقل من هنا
   }
 
   if (this.currentStep < this.stepsRecorded_Educational_Courses.length - 1) {
@@ -1027,19 +1007,17 @@ async submitCourseFlow2() {
       console.log("✅ Coupon Created:", couponRes);
     }
 
-    for (const attachment of this.summaryAttachments) {
-      if (attachment.file && attachment.name) {
-        const f = new FormData();
-        f.append("EntityId", courseId);
-        f.append("FileName", attachment.name);
-        f.append("Description", attachment.description);
-        f.append("attachment", attachment.file);
-        f.append("EntityType", "1");
+    if (this.course.book && this.course.bookTitle && this.course.bookDescription) {
+      const f = new FormData();
+      f.append("EntityId", courseId);
+      f.append("FileName", this.course.bookTitle);
+      f.append("Description", this.course.bookDescription);
+      f.append("attachment", this.course.book);
+      f.append("EntityType", "1");
 
-        console.log("📤 Uploading summary attachment:", attachment.name);
-        await this.http.post("https://api.makhekh.com/api/summary-attachments", f, { headers }).toPromise();
-        console.log("✅ Summary attachment uploaded:", attachment.name);
-      }
+      console.log("📤 Uploading Book File:", this.course.bookTitle);
+      const bookUploadRes = await this.http.post("https://api.makhekh.com/api/summary-attachments", f, { headers }).toPromise();
+      console.log("✅ Book File Uploaded:", bookUploadRes);
     }
 
     // const approveToken = 'eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjdiMGY1ZDkwLWJmNTAtNGQ5Mi1iNzE1LTY4MmUxYWZmODEwYSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2dpdmVubmFtZSI6Ik11c3RhZmEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJhZG1pbkBtYWhrZWhrLmNvbSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzUyMTM5ODAwLCJpc3MiOiJodHRwczovL2FwaS5tYWtoZWtoLmNvbS8iLCJhdWQiOiJNeVNlY3VyZUtleSJ9.PbFINqS-9vEDeZAxZt5vBqZ5pIKMFHeoi-_T-04exo4'; // Replace with real token
@@ -1198,6 +1176,11 @@ isFirstStepValid(): boolean {
     return false;
   }
 
+  // التأكد من رفع الكتاب (PDF)
+  if (!this.course.book) {
+    return false;
+  }
+
   // التحقق من تسعير الدورة إذا كانت مدفوعة
   if (this.courseData.isPaid) {
     if (
@@ -1208,6 +1191,11 @@ isFirstStepValid(): boolean {
     ) {
       return false;
     }
+  }
+
+  // في حال وجود شروط إضافية مثل اسم الكتاب ووصفه
+  if (!this.course.bookTitle || !this.course.bookDescription) {
+    return false;
   }
 
   // ✅ جميع الشروط مستوفية
@@ -1989,19 +1977,17 @@ async submitCourseFlowDraft(isDrafted: boolean) {
       console.log("✅ Coupon Created:", couponRes);
     }
 
-    for (const attachment of this.summaryAttachments) {
-      if (attachment.file && attachment.name) {
-        const f = new FormData();
-        f.append("EntityId", courseId);
-        f.append("FileName", attachment.name);
-        f.append("Description", attachment.description);
-        f.append("attachment", attachment.file);
-        f.append("EntityType", "1");
+    if (this.course.book && this.course.bookTitle && this.course.bookDescription) {
+      const f = new FormData();
+      f.append("EntityId", courseId);
+      f.append("FileName", this.course.bookTitle);
+      f.append("Description", this.course.bookDescription);
+      f.append("attachment", this.course.book);
+      f.append("EntityType", "1");
 
-        console.log("📤 Uploading summary attachment:", attachment.name);
-        await this.http.post("https://api.makhekh.com/api/summary-attachments", f, { headers }).toPromise();
-        console.log("✅ Summary attachment uploaded:", attachment.name);
-      }
+      console.log("📤 Uploading Book File:", this.course.bookTitle);
+      const bookUploadRes = await this.http.post("https://api.makhekh.com/api/summary-attachments", f, { headers }).toPromise();
+      console.log("✅ Book File Uploaded:", bookUploadRes);
     }
 
     const approveBody = {

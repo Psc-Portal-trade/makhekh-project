@@ -2,234 +2,122 @@
 <button class="btn btn-outline-success" (click)="openLectureQuizModal()">
   {{ 'quiz.create_new1' | transloco }}
 </button>
+
 <div class="modal fade" id="lectureQuizModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" style="max-width: 100%;">
-    <div class="modal-content p-4">
-      <button type="button" class="btn-close position-absolute top-0 end-0 m-3" (click)="closeLectureQuizModal()"></button>
-  
-      <h3 class="text-center fw-bold mb-3">{{ 'quiz.create' | transloco }}</h3>
-  
-      <form [formGroup]="quizForm" (ngSubmit)="onSubmit()">
-        <!-- Course Info -->
-        <div class="row mb-3">
-          <div class="col-md-12">
-            <label class="form-label">{{ 'quiz.course_name' | transloco }}</label>
-            <input type="text" class="form-control" formControlName="courseName">
-          </div>
-         
-        </div>
-  
-        <div class="row mb-3">
-         
-          <div class="col-md-12">
-            <label class="form-label">{{ 'quiz.duration' | transloco }}</label>
-            <input type="number" class="form-control" formControlName="duration">
-          </div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-md-6">
-            <label class="form-label">{{ 'quiz.attempts' | transloco }}</label>
-            <input type="number" class="form-control" formControlName="attempts">
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">{{ 'quiz.passing_score' | transloco }}</label>
-            <input type="number" class="form-control" formControlName="passingPercentage">
-          </div>
-        </div>
-  <!-- Is Free -->
-  <div class="mb-3">
-    <label class="form-label">{{ 'quiz.is_free' | transloco }}</label>
-    <div class="form-check">
-      <input class="form-check-input" type="radio" formControlName="isFree" [value]="true" id="freeYes">
-      <label class="form-check-label" for="freeYes">{{ 'quiz.free' | transloco }}</label>
-    </div>
-    <div class="form-check">
-      <input class="form-check-input" type="radio" formControlName="isFree" [value]="false" id="freeNo">
-      <label class="form-check-label" for="freeNo">{{ 'quiz.paid' | transloco }}</label>
-    </div>
-  </div>
-  <!-- Price if not free -->
-  <div class="mb-3" *ngIf="quizForm.get('isFree')?.value === false">
-    <label class="form-label">{{ 'quiz.price' | transloco }}</label>
-    <input type="number" class="form-control" formControlName="price">
-  </div>
-  
-        <div class="mb-3">
-          <label class="form-label">{{ 'quiz.description' | transloco }}</label>
-          <textarea class="form-control" formControlName="examDescription"></textarea>
-        </div>
-        <!-- Quiz Type Selection -->
-        <div class="mb-3">
-          <label class="form-label">{{ 'quiz.quiz_type' | transloco }}</label>
-            <select class="form-select" formControlName="quizType" (change)="onQuizTypeChange()">
-             <option value="mcq">{{ 'quiz.mcq' | transloco }}</option>
-             <option value="essay">{{ 'quiz.essay' | transloco }}</option>
-            </select>
-        </div>
-       <!-- عنوان الأسئلة سوف تُرفق على -->
-<!-- الاختيار بين كورس / سيكشن / محاضرة / subSection -->
-<div class="mb-3">
-  <label class="form-label fw-bold d-block">{{ 'quiz.attach_to' | transloco }}</label>
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 100%;">
+        <div class="modal-content p-4">
+            <button type="button" class="btn-close position-absolute top-0 end-0 m-3" (click)="closeLectureQuizModal()"></button>
 
-  <div class="form-check form-check-inline">
-    <input class="form-check-input" type="radio" formControlName="attachTo" value="course" id="attachToCourse">
-    <label class="form-check-label" for="attachToCourse">{{ 'quiz.attach.course' | transloco }}</label>
-  </div>
+            <h3 class="text-center fw-bold mb-3">{{ 'quiz.create' | transloco }}</h3>
 
-  <div class="form-check form-check-inline">
-    <input class="form-check-input" type="radio" formControlName="attachTo" value="section" id="attachToSection">
-    <label class="form-check-label" for="attachToSection">{{ 'quiz.attach.section' | transloco }}</label>
-  </div>
+            <form [formGroup]="quizForm" (ngSubmit)="onSubmit()">
+                <!-- Course Info -->
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="form-label required">{{ 'quiz.course_name' | transloco }}</label>
+                        <input type="text" class="form-control" formControlName="courseName">
+                    </div>
+                </div>
 
-  <div class="form-check form-check-inline">
-    <input class="form-check-input" type="radio" formControlName="attachTo" value="subSection" id="attachToSubSection">
-    <label class="form-check-label" for="attachToSubSection">{{ 'quiz.attach.subSection' | transloco }}</label>
-  </div>
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="form-label required">{{ 'quiz.duration' | transloco }}</label>
+                        <input type="number" class="form-control" formControlName="duration">
+                    </div>
+                </div>
 
-  <div class="form-check form-check-inline">
-    <input class="form-check-input" type="radio" formControlName="attachTo" value="lecture" id="attachToLecture">
-    <label class="form-check-label" for="attachToLecture">{{ 'quiz.attach.lecture' | transloco }}</label>
-  </div>
-</div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label required">{{ 'quiz.attempts' | transloco }}</label>
+                        <input type="number" class="form-control" formControlName="attempts">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label required">{{ 'quiz.passing_score' | transloco }}</label>
+                        <input type="number" class="form-control" formControlName="passingPercentage">
+                    </div>
+                </div>
 
-<!-- Dropdown للكورسات فقط عند اختيار course -->
-<div class="mb-3" *ngIf="quizForm.get('attachTo')?.value === 'course'">
-  <label class="form-label">{{ 'quiz.select_course' | transloco }}</label>
-  <select class="form-control" formControlName="selectedCourseId">
-    <option value="" disabled selected>{{ 'quiz.select_course' | transloco }}</option>
-    <option *ngFor="let course of teacherCourses" [value]="course.id">
-      {{ course.title }}
-    </option>
-  </select>
-</div>
+                <!-- Is Free -->
+                <div class="mb-3">
+                    <label class="form-label required">{{ 'quiz.is_free' | transloco }}</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" formControlName="isFree" [value]="true" id="freeYes">
+                        <label class="form-check-label" for="freeYes">{{ 'quiz.free' | transloco }}</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" formControlName="isFree" [value]="false" id="freeNo">
+                        <label class="form-check-label" for="freeNo">{{ 'quiz.paid' | transloco }}</label>
+                    </div>
+                </div>
 
-<!-- Dropdown للكورسات والسيكشن عند اختيار section -->
-<div *ngIf="quizForm.get('attachTo')?.value === 'section'">
-  <div class="mb-3">
-    <label class="form-label">{{ 'quiz.select_course' | transloco }}</label>
-    <select class="form-control" formControlName="selectedCourseId" (change)="onCourseSelectForSections()">
-      <option value="" disabled selected>{{ 'quiz.select_course' | transloco }}</option>
-      <option *ngFor="let course of teacherCourses" [value]="course.id">
-        {{ course.title }}
-      </option>
-    </select>
-  </div>
-  <div class="mb-3">
-    <label class="form-label">{{ 'quiz.select_section' | transloco }}</label>
-    <select class="form-control" formControlName="selectedSectionId">
-      <option value="" disabled selected>{{ 'quiz.select_section' | transloco }}</option>
-      <option *ngFor="let section of availableSections" [value]="section.id">
-        {{ section.title }}
-      </option>
-    </select>
-    <div *ngIf="availableSections.length === 0 && quizForm.get('selectedCourseId')?.value" class="text-danger">
-      {{ 'quiz.errors.no_sections_available' | transloco }}
-    </div>
-  </div>
-</div>
+                <!-- Price if not free -->
+                <div class="mb-3" *ngIf="quizForm.get('isFree')?.value === false">
+                    <label class="form-label required">{{ 'quiz.price' | transloco }}</label>
+                    <input type="number" class="form-control" formControlName="price">
+                </div>
 
-<!-- Dropdown للكورسات والسيكشن والـ subSection عند اختيار subSection -->
-<div *ngIf="quizForm.get('attachTo')?.value === 'subSection'">
-  <div class="mb-3">
-    <label class="form-label">{{ 'quiz.select_course' | transloco }}</label>
-    <select class="form-control" formControlName="selectedCourseId" (change)="onCourseSelectForSubSections()">
-      <option value="" disabled selected>{{ 'quiz.select_course' | transloco }}</option>
-      <option *ngFor="let course of teacherCourses" [value]="course.id">
-        {{ course.title }}
-      </option>
-    </select>
-  </div>
-  <div class="mb-3">
-    <label class="form-label">{{ 'quiz.select_section' | transloco }}</label>
-    <select class="form-control" formControlName="selectedSectionId" (change)="onSectionSelectForSubSections()">
-      <option value="" disabled selected>{{ 'quiz.select_section' | transloco }}</option>
-      <option *ngFor="let section of availableSections" [value]="section.id">
-        {{ section.title }}
-      </option>
-    </select>
-    <div *ngIf="availableSections.length === 0 && quizForm.get('selectedCourseId')?.value" class="text-danger">
-      {{ 'quiz.errors.no_sections_available' | transloco }}
-    </div>
-  </div>
-  <div class="mb-3">
-    <label class="form-label">{{ 'quiz.select_subSection' | transloco }}</label>
-    <select class="form-control" formControlName="selectedSubSectionId">
-      <option value="" disabled selected>{{ 'quiz.select_subSection' | transloco }}</option>
-      <option *ngFor="let subSection of availableSubSections" [value]="subSection.id">
-        {{ subSection.title }}
-      </option>
-    </select>
-    <div *ngIf="availableSubSections.length === 0 && quizForm.get('selectedSectionId')?.value" class="text-danger">
-      {{ 'quiz.errors.no_subSections_available' | transloco }}
-    </div>
-  </div>
-</div>
+                <div class="mb-3">
+                    <label class="form-label required">{{ 'quiz.description' | transloco }}</label>
+                    <textarea class="form-control" formControlName="examDescription"></textarea>
+                </div>
 
-<!-- Dropdown للكورسات والسيكشن والمحاضرات عند اختيار lecture -->
-<!-- Dropdown للكورسات والسيكشن والـ subSection والمحاضرات عند اختيار lecture -->
-<div *ngIf="quizForm.get('attachTo')?.value === 'lecture'">
-  <div class="mb-3">
-    <label class="form-label">{{ 'quiz.select_course' | transloco }}</label>
-    <select class="form-control" formControlName="selectedCourseId" (change)="onCourseSelectForLectures()">
-      <option value="" disabled selected>{{ 'quiz.select_course' | transloco }}</option>
-      <option *ngFor="let course of teacherCourses" [value]="course.id">
-        {{ course.title }}
-      </option>
-    </select>
-    <div *ngIf="teacherCourses.length === 0" class="text-danger">
-      {{ 'quiz.errors.no_courses_available' | transloco }}
-    </div>
-  </div>
-  <div class="mb-3">
-    <label class="form-label">{{ 'quiz.select_section' | transloco }}</label>
-    <select class="form-control" formControlName="selectedSectionId" (change)="onSectionSelectForLectures()">
-      <option value="" disabled selected>{{ 'quiz.select_section' | transloco }}</option>
-      <option *ngFor="let section of availableSections" [value]="section.id">
-        {{ section.title }}
-      </option>
-    </select>
-    <div *ngIf="availableSections.length === 0 && quizForm.get('selectedCourseId')?.value" class="text-danger">
-      {{ 'quiz.errors.no_sections_available' | transloco }}
-    </div>
-  </div>
-  <div class="mb-3">
-    <label class="form-label">{{ 'quiz.select_subSection' | transloco }}</label>
-    <select class="form-control" formControlName="selectedSubSectionId" (change)="onSubSectionSelectForLectures()">
-      <option value="" disabled selected>{{ 'quiz.select_subSection_optional' | transloco }}</option>
-      <option *ngFor="let subSection of availableSubSections" [value]="subSection.id">
-        {{ subSection.title }}
-      </option>
-    </select>
-    <div *ngIf="availableSubSections.length === 0 && quizForm.get('selectedSectionId')?.value" class="text-danger">
-      {{ 'quiz.errors.no_subSections_available' | transloco }}
-    </div>
-  </div>
-  <div class="mb-3">
-    <label class="form-label">{{ 'quiz.select_lecture' | transloco }}</label>
-    <select class="form-control" formControlName="selectedLectureId">
-      <option value="" disabled selected>{{ 'quiz.select_lecture' | transloco }}</option>
-      <option *ngFor="let lecture of availableLectures" [value]="lecture.id">
-        {{ lecture.title }}
-      </option>
-    </select>
-    <div *ngIf="availableLectures.length === 0 && (quizForm.get('selectedSectionId')?.value || quizForm.get('selectedSubSectionId')?.value)" class="text-danger">
-      {{ 'quiz.errors.no_lectures_available' | transloco }}
-    </div>
-  </div>
-</div>
+                <!-- Quiz Type Selection -->
+                <div class="mb-3">
+                    <label class="form-label required">{{ 'quiz.quiz_type' | transloco }}</label>
+                    <select class="form-select" formControlName="quizType" (change)="onQuizTypeChange()">
+            <option value="mcq">{{ 'quiz.mcq' | transloco }}</option>
+            <option value="essay">{{ 'quiz.essay' | transloco }}</option>
+          </select>
+                </div>
 
+                <!-- Attach To -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold d-block required">{{ 'quiz.attach_to' | transloco }}</label>
 
-  
-        <button type="submit" class="btn btn-success mt-3">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" formControlName="attachTo" value="course" id="attachToCourse">
+                        <label class="form-check-label" for="attachToCourse">{{ 'quiz.attach.course' | transloco }}</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" formControlName="attachTo" value="section" id="attachToSection">
+                        <label class="form-check-label" for="attachToSection">{{ 'quiz.attach.section' | transloco }}</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" formControlName="attachTo" value="subSection" id="attachToSubSection">
+                        <label class="form-check-label" for="attachToSubSection">{{ 'quiz.attach.subSection' | transloco }}</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" formControlName="attachTo" value="lecture" id="attachToLecture">
+                        <label class="form-check-label" for="attachToLecture">{{ 'quiz.attach.lecture' | transloco }}</label>
+                    </div>
+                </div>
+
+                <!-- Example: required on dropdowns based on selection -->
+                <div class="mb-3" *ngIf="quizForm.get('attachTo')?.value === 'course'">
+                    <label class="form-label required">{{ 'quiz.select_course' | transloco }}</label>
+                    <select class="form-control" formControlName="selectedCourseId">
+            <option value="" disabled selected>{{ 'quiz.select_course' | transloco }}</option>
+            <option *ngFor="let course of teacherCourses" [value]="course.id">
+              {{ course.title }}
+            </option>
+          </select>
+                </div>
+
+                <!-- باقي اختيارات الـ attachTo هتكون نفس الفكرة بإضافة الكلاس required على أي label إلزامي -->
+
+                <button type="submit" class="btn btn-success mt-3">
           {{ 'quiz.save' | transloco }}
         </button>
-        <div *ngIf="errorMessages.length" class="alert alert-danger mt-3">
-            <li *ngFor="let msg of errorMessages">
-                {{ msg.split('|')[0] | transloco: extractParams(msg) }}
-              </li>
+
+                <div *ngIf="errorMessages.length" class="alert alert-danger mt-3">
+                    <li *ngFor="let msg of errorMessages">
+                        {{ msg.split('|')[0] | transloco: extractParams(msg) }}
+                    </li>
+                </div>
+            </form>
         </div>
-    
-      </form>
     </div>
-  </div>
 </div>

@@ -83,7 +83,8 @@
             "view all Java courses": "View all Java courses",
             "view all Android courses": "View all Android courses",
             "view all CSS  courses": "View all CSS  courses",
-            "view all Web Development courses": "View all Web Development courses"
+            "view all Web Development courses": "View all Web Development courses",
+            "There are no courses in this category currently.": "There are no courses in this category currently."
         },
         "third-section-home": {
             "invest in your career with us": "Invest in your career with us",
@@ -271,15 +272,15 @@
         "no_coupons_found": "No coupons found. Create one to get started!"
     },
     "orders": {
-    "stats": {
-      "totalCourses": "Total Courses",
-      "totalStudents": "Total Students",
-      "scheduledLectures": "Scheduled Lectures",
-      "completedLectures": "Completed Lectures",
-      "totalEarnings": "Total Earnings",
-      "teacherWallet": "Teacher's Wallet",
-      "platformWallet": "Platform's Wallet"
-    },
+        "stats": {
+            "totalCourses": "Total Courses",
+            "totalStudents": "Total Students",
+            "scheduledLectures": "Scheduled Lectures",
+            "completedLectures": "Completed Lectures",
+            "totalEarnings": "Total Earnings",
+            "teacherWallet": "Teacher's Wallet",
+            "platformWallet": "Platform's Wallet"
+        },
         "studentName": "Student Name",
         "courseName": "Course Name",
         "subscriptionDate": "Subscription Date"
@@ -427,13 +428,13 @@
         "category": "category"
     },
     "students_orders": {
-      "title": "My Orders",
-      "export_report": "Export Report",
-      "order_id": "Order ID",
-      "course_name": "Course Name",
-      "teacher_name": "Teacher Name",
-      "enrollment_date": "Enrollment Date",
-      "teacher_referral": "Teacher Referral"
+        "title": "My Orders",
+        "export_report": "Export Report",
+        "order_id": "Order ID",
+        "course_name": "Course Name",
+        "teacher_name": "Teacher Name",
+        "enrollment_date": "Enrollment Date",
+        "teacher_referral": "Teacher Referral"
     },
     "quiz-form": {
         "title": "Quiz Title",
@@ -763,7 +764,7 @@
         "+ Add Lecture File": "+ Add Lecture File",
         "+ Add Section File": "+ Add Section File",
         "File Name": "File Name",
-        "File":"File upload",
+        "File": "File upload",
         "File Description": "File Description",
         "Course Book (PDF)": "Course Book (PDF)",
         "isPaid": "Paid",
@@ -875,7 +876,7 @@
         "Remove": "Remove",
         "Add Coupon": "Add Coupon",
         "Next": "Next",
-            "Submit for Review": "Submit for Review",
+        "Submit for Review": "Submit for Review",
         "General Attachments": "General Attachments",
         "+ Add Another File": "+ Add Another File",
         "Instructor Schedules": "Instructor Schedules",
@@ -1079,8 +1080,8 @@
         "is_free": "Is the quiz free?",
         "free": "Free",
         "paid": "Paid",
-        "edit":"Edit",
-        "close":"Close",
+        "edit": "Edit",
+        "close": "Close",
         "price": "Price (SAR)",
         "category": "Category",
         "attach": {
@@ -1336,15 +1337,15 @@
         "cancel": "Cancel",
         "confirm": "Confirm",
         "question": "Question",
-    "correct": "Correct",
-    "incorrect": "Incorrect",
-    "flagged_question": "Flagged Question",
-    "model_answer": "Model Answer",
-    "answer_explanation": "Explanation",
-    "finish_review": "Finish Review",
-    "quiz_navigation": "Quiz Navigation",
+        "correct": "Correct",
+        "incorrect": "Incorrect",
+        "flagged_question": "Flagged Question",
+        "model_answer": "Model Answer",
+        "answer_explanation": "Explanation",
+        "finish_review": "Finish Review",
+        "quiz_navigation": "Quiz Navigation",
         "submitted_at": "Submitted At",
-    "correct_answers": "Correct Answers"
+        "correct_answers": "Correct Answers"
 
     },
     "examReport": {

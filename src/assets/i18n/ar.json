@@ -30,7 +30,7 @@
         "home": "الرئيسية",
         "search": "بحث",
         "my courses": "دوراتي",
-      "my orders": "طلباتي",
+        "my orders": "طلباتي",
         "My Cart": "عربة التسوق",
         "Wishlist": "المفضلة",
         "Instructor Dashboard": "لوحة  المدرب",
@@ -77,7 +77,8 @@
             "view all Java courses": "عرض جميع دورات  جافا",
             "view all Android courses": "عرض جميع دورات  اندرويد",
             "view all CSS  courses": "عرض جميع دورات CSS",
-            "view all Web Development courses": "عرض جميع دورات تطوير الويب"
+            "view all Web Development courses": "عرض جميع دورات تطوير الويب",
+            "There are no courses in this category currently.": "لا توجد كورسات في هذا التصنيف حالياً."
         },
         "third-section-home": {
             "invest in your career with us": "استثمر في مسيرتك المهنية معنا",
@@ -266,15 +267,15 @@
         "no_coupons_found": "لم يتم العثور على قسائم. قم بإنشاء واحدة للبدء!"
     },
     "orders": {
-    "stats": {
-      "totalCourses": "إجمالي الدورات",
-      "totalStudents": "إجمالي الطلاب",
-      "scheduledLectures": "المحاضرات المجدولة",
-      "completedLectures": "المحاضرات المكتملة",
-      "totalEarnings": "إجمالي الإيرادات",
-      "teacherWallet": "محفظة المعلم",
-      "platformWallet": "محفظة المنصة"
-    },
+        "stats": {
+            "totalCourses": "إجمالي الدورات",
+            "totalStudents": "إجمالي الطلاب",
+            "scheduledLectures": "المحاضرات المجدولة",
+            "completedLectures": "المحاضرات المكتملة",
+            "totalEarnings": "إجمالي الإيرادات",
+            "teacherWallet": "محفظة المعلم",
+            "platformWallet": "محفظة المنصة"
+        },
         "title": "الطلبات",
         "studentName": "اسم الطالب",
         "courseName": "اسم الدورة",
@@ -431,15 +432,15 @@
         "copyLink": "نسخ الرابط",
         "language": "اللغة",
         "english": "الإنجليزية",
-    "students_orders": {
-        "title": "طلباتي",
-        "export_report": "استخراج تقرير",
-        "order_id": "رقم الطلب",
-        "course_name": "اسم الدورة",
-        "date": "التاريخ",
-        "price": "السعر",
-        "status": "الحالة"
-    },
+        "students_orders": {
+            "title": "طلباتي",
+            "export_report": "استخراج تقرير",
+            "order_id": "رقم الطلب",
+            "course_name": "اسم الدورة",
+            "date": "التاريخ",
+            "price": "السعر",
+            "status": "الحالة"
+        },
         "arabic": "العربية",
         "address": "العنوان",
         "file": "ملف",
@@ -788,7 +789,7 @@
         "+ Add Lecture File": "+ إضافة ملف للمحاضرة",
         "+ Add Section File": "+ إضافة ملف للقسم",
         "File Name": "اسم الملف",
-        "File":"إضافة ملف",
+        "File": "إضافة ملف",
         "File Description": "وصف الملف",
         "Course Book (PDF)": "كتاب الدورة (PDF)",
         "isPaid": "مدفوع",
@@ -907,7 +908,7 @@
         "Remove": "ازالة",
         "Add Coupon": "إضافة قسيمة",
         "Next": "التالي",
-            "Submit for Review": "إرسال للمراجعة",
+        "Submit for Review": "إرسال للمراجعة",
         "General Attachments": "المرفقات العامة",
         "+ Add Another File": "+ إضافة ملف آخر",
         "Instructor Schedules": "جداول المدربين",
@@ -1115,8 +1116,8 @@
         "is_free": "هل الاختبار مجاني؟",
         "free": "مجاني",
         "paid": "مدفوع",
-        "edit":"تعديل",
-        "close":"إغلاق",
+        "edit": "تعديل",
+        "close": "إغلاق",
         "price": "السعر (ريال سعودي)",
         "category": "الفئة",
         "attach": {
@@ -1323,9 +1324,9 @@
 
     },
     "courseParts": {
-        "Course Content": "محتوى الدورة",
+        "Course Content": "فيديوهات الدورة",
         "Course Attachments": "مرفقات الدورة",
-        "Course Exams": "امتحانات الدورة",
+        "Course Exams": "اختبارات الدورة",
         "Exam results for the course": "نتائج الاختبارات للدورة",
         "Reports": "تقارير"
 
@@ -1340,7 +1341,7 @@
         "timeLimit": "المدة: {{minutes}} دقيقة",
         "attemptsAllowed": "المحاولات: {{attempts}}",
         "startButton": "ابدأ الاختبار",
-        "noExams": "لا توجد امتحانات متاحة",
+        "noExams": "لا توجد اختبارات متاحة",
         "reviewAttempts": "ابدأ مراجعة محاولاتك",
         "backToHome": "العودة إلى الصفحة الرئيسية"
 
@@ -1398,15 +1399,15 @@
         "cancel": "إلغاء",
         "confirm": "تأكيد",
         "question": "سؤال",
-    "correct": "صحيح",
-    "incorrect": "غير صحيح",
-    "flagged_question": "سؤال مميز",
-    "model_answer": "الإجابة النموذجية",
-    "answer_explanation": "توضيح",
-    "finish_review": "إنهاء المراجعة",
-    "quiz_navigation": "تنقل الاختبار",
+        "correct": "صحيح",
+        "incorrect": "غير صحيح",
+        "flagged_question": "سؤال مميز",
+        "model_answer": "الإجابة النموذجية",
+        "answer_explanation": "توضيح",
+        "finish_review": "إنهاء المراجعة",
+        "quiz_navigation": "تنقل الاختبار",
         "correct_answers": "الإجابات الصحيحة",
-    "submitted_at": "تاريخ التسليم"
+        "submitted_at": "تاريخ التسليم"
 
 
 
