@@ -140,136 +140,220 @@
                 </div>
 
                 <!-- Step 2: Curriculum -->
-                <div *ngIf="currentStep === 1" class="container mt-4">
-                    <h3 class="mb-4">{{ 'course-header.Curriculum' | transloco }}</h3>
+              <div *ngIf="currentStep === 1" class="container mt-4">
+  <h3 class="mb-4">{{ 'course-header.Curriculum' | transloco }}</h3>
 
-                    <div *ngFor="let section of sections; let sectionIndex = index" class="card mb-4">
-                        <div class="card-body">
-                            <h5 class="fw-bold mb-3">
-                                {{ 'course-header.Section' | transloco }} {{ sectionIndex + 1 }}
-                            </h5>
+  <div *ngFor="let section of sections; let sectionIndex = index" class="card mb-4">
+    <div class="card-body">
+      <h5 class="fw-bold mb-3">
+        {{ 'course-header.Section' | transloco }} {{ sectionIndex + 1 }}
+      </h5>
 
-                            <div class="d-flex flex-column align-items-start">
-                                <button class="btn btn-danger btn-sm mb-2" (click)="removeSection(sectionIndex)">
-                          {{ 'course-header.Delete Section' | transloco }}
-                        </button>
+      <div class="d-flex flex-column align-items-start">
+        <button class="btn btn-danger btn-sm mb-2" (click)="removeSection(sectionIndex)">
+          {{ 'course-header.Delete Section' | transloco }}
+        </button>
 
-                                <label class="required w-100">
-                          <input [(ngModel)]="section.name" class="form-control mb-2 w-100"
-                            [attr.placeholder]="'course-header.Section Name' | transloco" />
-                        </label>
+        <label class="form-label required">{{ 'course-header.Section Name' | transloco }} <span class="text-danger">*</span></label>
+        <input [(ngModel)]="section.name" class="form-control mb-2 w-100 required" [attr.placeholder]="'course-header.Section Name' | transloco" />
 
-                                <label class="required w-100">
-                          <input [(ngModel)]="section.description" class="form-control mb-3 w-100"
-                            [attr.placeholder]="'course-header.Description' | transloco" />
-                        </label>
-                            </div>
+        <label class="form-label required">{{ 'course-header.Description' | transloco }} <span class="text-danger">*</span></label>
+        <input [(ngModel)]="section.description" class="form-control mb-3 w-100 required" [attr.placeholder]="'course-header.Description' | transloco" />
+      </div>
 
-                            <!-- Section Files -->
-                            <div *ngFor="let attachment of section.attachments; let sFileIndex = index" class="row mb-2">
-                                <div class="col-md-4">
-                                    <label class="required w-100">
-                            <input type="file" class="form-control"
-                              (change)="onSectionFileSelected($event, sectionIndex, sFileIndex)"
-                              accept=".pdf,application/pdf" />
-                          </label>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="required w-100">
-                            <input type="text" class="form-control" [(ngModel)]="attachment.name"
-                              [attr.placeholder]="'course-header.File Name' | transloco" />
-                          </label>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="required w-100">
-                            <input type="text" class="form-control" [(ngModel)]="attachment.description"
-                              [attr.placeholder]="'course-header.File Description' | transloco" />
-                          </label>
-                                </div>
-                                <div class="col-md-1 d-flex align-items-center">
-                                    <button class="btn btn-danger btn-sm" (click)="removeSectionFile(sectionIndex, sFileIndex)">×</button>
-                                </div>
-                            </div>
+      <div *ngFor="let attachment of section.attachments; let sFileIndex = index" class="row mb-2">
+        <div class="col-md-4">
+          <label class="form-label required">{{ 'course-header.Select File' | transloco }} <span class="text-danger">*</span></label>
+          <input type="file" class="form-control required" (change)="onSectionFileSelected($event, sectionIndex, sFileIndex)" accept=".pdf,application/pdf" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label required">{{ 'course-header.File Name' | transloco }} <span class="text-danger">*</span></label>
+          <input type="text" class="form-control required" [(ngModel)]="attachment.name" [attr.placeholder]="'course-header.File Name' | transloco" />
+        </div>
+        <div class="col-md-3">
+          <label class="form-label required">{{ 'course-header.File Description' | transloco }} <span class="text-danger">*</span></label>
+          <input type="text" class="form-control required" [(ngModel)]="attachment.description" [attr.placeholder]="'course-header.File Description' | transloco" />
+        </div>
+        <div class="col-md-1 d-flex align-items-center">
+          <button class="btn btn-danger btn-sm" (click)="removeSectionFile(sectionIndex, sFileIndex)">×</button>
+        </div>
+      </div>
 
-                            <button class="btn btn-sm btn-outline-primary mb-4" (click)="addSectionFile(sectionIndex)">
-                        {{ 'course-header.+ Add Section File' | transloco }}
-                      </button>
+      <button class="btn btn-sm btn-outline-primary mb-4" (click)="addSectionFile(sectionIndex)">
+        {{ 'course-header.+ Add Section File' | transloco }}
+      </button>
 
-                            <!-- Section Content: Lectures & Subsections -->
-                            <div *ngFor="let item of section.content; let ci = index">
-                                <!-- Lecture Item -->
-                                <ng-container *ngIf="item.type === 'lecture'">
-                                    <div class="mb-4 border rounded p-3 bg-white">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <strong>{{ 'course-header.Lecture' | transloco }}</strong>
-                                            <button class="btn btn-danger btn-sm mb-2" (click)="removeLecture(sectionIndex, ci)">
-                                {{ 'course-header.Delete Lecture' | transloco }}
-                              </button>
-                                        </div>
+      <div *ngFor="let item of section.content; let ci = index">
+        <ng-container *ngIf="item.type === 'lecture'">
+          <div class="mb-4 border rounded p-3 bg-white">
+            <div class="d-flex justify-content-between align-items-center">
+              <strong>{{ 'course-header.Lecture' | transloco }}</strong>
+              <button class="btn btn-danger btn-sm mb-2" (click)="removeLecture(sectionIndex, ci)">
+                {{ 'course-header.Delete Lecture' | transloco }}
+              </button>
+            </div>
 
-                                        <label class="required w-100">
-                              <input [(ngModel)]="item.data.title" class="form-control mb-2"
-                                [attr.placeholder]="'course-header.Lecture Title' | transloco" />
-                            </label>
+            <label class="form-label required">{{ 'course-header.Lecture Title' | transloco }} <span class="text-danger">*</span></label>
+            <input [(ngModel)]="item.data.title" class="form-control mb-2 required" [attr.placeholder]="'course-header.Lecture Title' | transloco" />
 
-                                        <div class="nav nav-tabs mb-2">
-                                            <button class="nav-link" [class.active]="item.data.activeTab === 'video'" (click)="item.data.activeTab = 'video'">
-                                {{ 'course-header.Video' | transloco }}
-                              </button>
-                                            <button class="nav-link" [class.active]="item.data.activeTab === 'description'" (click)="item.data.activeTab = 'description'">
-                                {{ 'course-header.Description' | transloco }}
-                              </button>
-                                        </div>
+            <div class="nav nav-tabs mb-2">
+              <button class="nav-link" [class.active]="item.data.activeTab === 'video'" (click)="item.data.activeTab = 'video'">
+                {{ 'course-header.Video' | transloco }}
+              </button>
+              <button class="nav-link" [class.active]="item.data.activeTab === 'description'" (click)="item.data.activeTab = 'description'">
+                {{ 'course-header.Description' | transloco }}
+              </button>
+            </div>
 
-                                        <div *ngIf="item.data.activeTab === 'video'" class="mb-2">
-                                            <div class="custom-file-upload required">
-                                                <span *ngIf="!item.data.videoName" class="file-placeholder">
-                                  {{ 'course-header.No selected file' | transloco }}
-                                </span>
-                                                <span *ngIf="item.data.videoName" class="file-name">
-                                  {{ item.data.videoName }}
-                                </span>
-                                                <input type="file" #fileInput hidden (change)="onFileSelected($event, sectionIndex, ci)" accept="video/*" />
-                                                <button class="btn btn-link select-video-btn" (click)="fileInput.click()">
-                                  {{ 'course-header.Select Video' | transloco }}
-                                </button>
-                                            </div>
-                                        </div>
+            <div *ngIf="item.data.activeTab === 'video'" class="mb-2">
+              <label class="form-label required">{{ 'course-header.Select Video' | transloco }} <span class="text-danger">*</span></label>
+              <div class="custom-file-upload">
+                <span *ngIf="!item.data.videoName" class="file-placeholder">
+                  {{ 'course-header.No selected file' | transloco }}
+                </span>
+                <span *ngIf="item.data.videoName" class="file-name">
+                  {{ item.data.videoName }}
+                </span>
+                <input type="file" #fileInput hidden (change)="onFileSelected($event, sectionIndex, ci)" accept="video/*" class="required" />
+                <button class="btn btn-link select-video-btn" (click)="fileInput.click()">
+                  {{ 'course-header.Select Video' | transloco }}
+                </button>
+              </div>
+            </div>
 
-                                        <div *ngIf="item.data.activeTab === 'description'" class="mb-2">
-                                            <label class="required w-100">
-                                <textarea [(ngModel)]="item.data.description" class="form-control"
-                                  [attr.placeholder]="'course-header.Enter video description' | transloco"></textarea>
-                              </label>
-                                        </div>
-                                    </div>
-                                </ng-container>
+            <div *ngIf="item.data.activeTab === 'description'" class="mb-2">
+              <label class="form-label required">{{ 'course-header.Enter video description' | transloco }} <span class="text-danger">*</span></label>
+              <textarea [(ngModel)]="item.data.description" class="form-control required" [attr.placeholder]="'course-header.Enter video description' | transloco"></textarea>
+            </div>
 
-                                <!-- SubSection Item -->
-                                <ng-container *ngIf="item.type === 'subsection'">
-                                    <div class="border rounded p-3 mb-4 bg-light">
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <h5>{{ 'course-header.SubSection' | transloco }}</h5>
-                                            <button class="btn btn-danger btn-sm" (click)="removeSubSection(sectionIndex, ci)">
-                                {{ 'course-header.Delete SubSection' | transloco }}
-                              </button>
-                                        </div>
+            <div *ngFor="let file of item.data.files; let fileIndex = index" class="row mb-2">
+              <div class="col-md-4">
+                <label class="form-label required">{{ 'course-header.Select File' | transloco }} <span class="text-danger">*</span></label>
+                <input type="file" class="form-control required" (change)="onLectureFileSelected($event, sectionIndex, ci, fileIndex)" accept=".pdf,application/pdf" />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label required">{{ 'course-header.File Name' | transloco }} <span class="text-danger">*</span></label>
+                <input type="text" class="form-control required" [(ngModel)]="file.name" [attr.placeholder]="'course-header.File Name' | transloco" />
+              </div>
+              <div class="col-md-3">
+                <label class="form-label required">{{ 'course-header.File Description' | transloco }} <span class="text-danger">*</span></label>
+                <input type="text" class="form-control required" [(ngModel)]="file.description" [attr.placeholder]="'course-header.File Description' | transloco" />
+              </div>
+              <div class="col-md-1 d-flex align-items-center">
+                <button class="btn btn-danger btn-sm" (click)="removeLectureFile(sectionIndex, ci, fileIndex)">×</button>
+              </div>
+            </div>
 
-                                        <label class="required w-100">
-                              <input [(ngModel)]="item.data.name" class="form-control mb-2"
-                                [attr.placeholder]="'course-header.SubSection Name' | transloco" />
-                            </label>
+            <button class="btn btn-sm btn-outline-primary mb-3" (click)="addLectureFile(sectionIndex, ci)">
+              {{ 'course-header.+ Add Lecture File' | transloco }}
+            </button>
+          </div>
+        </ng-container>
 
-                                        <label class="required w-100">
-                              <input [(ngModel)]="item.data.description" class="form-control mb-3"
-                                [attr.placeholder]="'course-header.Description' | transloco" />
-                            </label>
-                                    </div>
-                                </ng-container>
-                            </div>
-                        </div>
-                    </div>
+        <ng-container *ngIf="item.type === 'subsection'">
+          <div class="border rounded p-3 mb-4 bg-light">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h5>{{ 'course-header.SubSection' | transloco }}</h5>
+              <button class="btn btn-danger btn-sm" (click)="removeSubSection(sectionIndex, ci)">
+                {{ 'course-header.Delete SubSection' | transloco }}
+              </button>
+            </div>
+
+            <label class="form-label required">{{ 'course-header.SubSection Name' | transloco }} <span class="text-danger">*</span></label>
+            <input [(ngModel)]="item.data.name" class="form-control mb-2 required" [attr.placeholder]="'course-header.SubSection Name' | transloco" />
+
+            <label class="form-label required">{{ 'course-header.Description' | transloco }} <span class="text-danger">*</span></label>
+            <input [(ngModel)]="item.data.description" class="form-control mb-3 required" [attr.placeholder]="'course-header.Description' | transloco" />
+
+            <div *ngFor="let lecture of item.data.lectures; let li = index" class="mb-3">
+              <div class="border rounded p-3 bg-white">
+                <div class="d-flex justify-content-between align-items-center">
+                  <strong>{{ 'course-header.Lecture' | transloco }}</strong>
+                  <button class="btn btn-danger btn-sm mb-3" (click)="removeLectureFromSubSection(sectionIndex, ci, li)">
+                    {{ 'course-header.Delete Lecture' | transloco }}
+                  </button>
                 </div>
+
+                <label class="form-label required">{{ 'course-header.Lecture Title' | transloco }} <span class="text-danger">*</span></label>
+                <input [(ngModel)]="lecture.title" class="form-control mb-2 required" [attr.placeholder]="'course-header.Lecture Title' | transloco" />
+
+                <div class="nav nav-tabs mb-2">
+                  <button class="nav-link" [class.active]="lecture.activeTab === 'video'" (click)="lecture.activeTab = 'video'">
+                    {{ 'course-header.Video' | transloco }}
+                  </button>
+                  <button class="nav-link" [class.active]="lecture.activeTab === 'description'" (click)="lecture.activeTab = 'description'">
+                    {{ 'course-header.Description' | transloco }}
+                  </button>
+                </div>
+
+                <div *ngIf="lecture.activeTab === 'video'" class="mb-2">
+                  <label class="form-label required">{{ 'course-header.Select Video' | transloco }} <span class="text-danger">*</span></label>
+                  <div class="custom-file-upload">
+                    <span *ngIf="!lecture.videoName" class="file-placeholder">
+                      {{ 'course-header.No selected file' | transloco }}
+                    </span>
+                    <span *ngIf="lecture.videoName" class="file-name">
+                      {{ lecture.videoName }}
+                    </span>
+                    <input type="file" #fileSubInput hidden (change)="onSubSectionLectureVideoSelected($event, sectionIndex, ci, li)" accept="video/*" class="required" />
+                    <button class="btn btn-link select-video-btn" (click)="fileSubInput.click()">
+                      {{ 'course-header.Select Video' | transloco }}
+                    </button>
+                  </div>
+                </div>
+
+                <div *ngIf="lecture.activeTab === 'description'" class="mb-2">
+                  <label class="form-label required">{{ 'course-header.Enter video description' | transloco }} <span class="text-danger">*</span></label>
+                  <textarea [(ngModel)]="lecture.description" class="form-control required" [attr.placeholder]="'course-header.Enter video description' | transloco"></textarea>
+                </div>
+
+                <div *ngFor="let file of lecture.files; let fileIndex = index" class="row mb-2">
+                  <div class="col-md-4">
+                    <label class="form-label required">{{ 'course-header.Select File' | transloco }} <span class="text-danger">*</span></label>
+                    <input type="file" class="form-control required" (change)="onSubSectionLectureFileSelected($event, sectionIndex, ci, li, fileIndex)" accept=".pdf,application/pdf" />
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label required">{{ 'course-header.File Name' | transloco }} <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control required" [(ngModel)]="file.name" [attr.placeholder]="'course-header.File Name' | transloco" />
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label required">{{ 'course-header.File Description' | transloco }} <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control required" [(ngModel)]="file.description" [attr.placeholder]="'course-header.File Description' | transloco" />
+                  </div>
+                  <div class="col-md-1 d-flex align-items-center">
+                    <button class="btn btn-danger btn-sm" (click)="removeSubSectionLectureFile(sectionIndex, ci, li, fileIndex)">×</button>
+                  </div>
+                </div>
+
+                <button class="btn btn-sm btn-outline-primary mb-3" (click)="addSubSectionLectureFile(sectionIndex, ci, li)">
+                  {{ 'course-header.+ Add Lecture File' | transloco }}
+                </button>
+              </div>
+            </div>
+
+            <button class="btn btn-sm btn-secondary" (click)="addLectureToSubSection(sectionIndex, ci)">
+              {{ 'course-header.+ Add Lecture' | transloco }}
+            </button>
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="mt-3 d-flex gap-2">
+        <button class="btn btn-outline-primary btn-sm" (click)="addLecture(sectionIndex)">
+          {{ 'course-header.+ Add Lecture' | transloco }}
+        </button>
+        <button class="btn btn-outline-secondary btn-sm" (click)="addSubSection(sectionIndex)">
+          {{ 'course-header.+ Add SubSection' | transloco }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn btn-primary w-100" (click)="addSection()">
+    {{ 'course-header.+ Add Section' | transloco }}
+  </button>
+</div>
+
 
 
 
